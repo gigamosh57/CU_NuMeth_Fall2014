@@ -3,42 +3,56 @@
 ########################################################
 ##### BEGIN PYTHON CODE
 ########################################################
-
 import numpy as np
 
 print "Hello World!\n";
 
 
+# MAKE ARRAYS
 
-x = np.matrix('1 2 3 4 5')
 
-#print x
 
-y = np.matrix('1;2;3;1;1')
-#print y
 
-A = np.matrix('1 2 3 1; 4 1 3 2; 4 4 3 1; 3 2 3 3')
-#print A
+x = np.array([1,2,3,4,5])
+print x
+print " "
 
-#print A[2,3]
+y = np.array([[1],[2],[3],[4],[5]])
+print y
+print " "
+
+A = np.array([[1,2,3,1],[4,1,3,2],[4,4,3,1],[3,2,3,3]])
+print A
+print " "
+
+print A[0,3]
+print " "
 
 A[2,3] = 0
 
-#print A[2,3]
+print A[2,3]
+print " "
 
-z = np.matrix('1 1 3 1')
+z = np.array([1,1,3,1])
+print z
+print " "
 
-B = np.concatenate((z,A))
+# APPEND AND TRANSPOSE MATRICES
+
+B = np.vstack((z,A))
+
+print B
+print " "
 
 print z
+print zip(z.T)
 
-print A
-
-print B
-
-B = np.concatenate((A,z))
+B = np.hstack((zip(z.T),A))
 
 print B
+print " "
+
+
 ########################################################
 ##### END PYTHON CODE
 ########################################################

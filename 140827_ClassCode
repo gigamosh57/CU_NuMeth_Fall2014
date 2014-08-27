@@ -8,7 +8,7 @@ import numpy as np
 print "Hello World!\n";
 
 
-# MAKE ARRAYS
+######## MAKE ARRAYS
 
 
 
@@ -37,7 +37,7 @@ z = np.array([1,1,3,1])
 print z
 print " "
 
-# APPEND AND TRANSPOSE MATRICES
+######## APPEND AND TRANSPOSE MATRICES
 
 B = np.vstack((z,A))
 
@@ -51,6 +51,23 @@ B = np.hstack((zip(z.T),A))
 
 print B
 print " "
+
+######## SELECTING SUBSETS OF ARRAYS
+
+B = np.vstack((z,A))
+
+print B
+print " "
+print B[0:4,]
+print " "
+print B[:,0:4]
+print " "
+print B.shape
+print " "
+print np.delete(B,1,0).shape
+print " "
+print np.delete(B,1,1).shape
+
 
 
 ########################################################

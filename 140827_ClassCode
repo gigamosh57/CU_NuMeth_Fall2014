@@ -5,13 +5,7 @@
 ########################################################
 import numpy as np
 
-print "Hello World!\n";
-
-
 ######## MAKE ARRAYS
-
-
-
 
 x = np.array([1,2,3,4,5])
 print x
@@ -45,7 +39,8 @@ print B
 print " "
 
 print z
-print zip(z.T)
+print zip(zy = np.array([[1],[2],[3],[4],[5]])
+print zip(y.T)
 
 B = np.hstack((zip(z.T),A))
 
@@ -68,6 +63,66 @@ print np.delete(B,1,0).shape
 print " "
 print np.delete(B,1,1).shape
 
+######## MORE MANIPULATION
+
+B = np.vstack((z,A))
+
+C = np.hstack((B,y))
+
+C = C[:,0:4]
+
+C[2:4,3:5]
+
+B=np.array([[1, 1, 2, 1],[ 1, 3 ,1, 1],[ 2, 4 ,5 ,1],[ 1, 3 ,4 ,2]])
+
+A+B
+
+A*B # by cell multiplication
+
+np.dot(A,B) # matrix multiplication
+
+A*B == B*A
+
+np.dot(A,B) != np.dot(B,A)
+
+np.rint(A)/np.rint(B)
+
+np.linalg.inv(A)*B
+
+A\B
+
+D = A.T
+
+np.dot(A,D) # This makes a symmetrical matrix...as it should
+0
+E = np.array(np.identity(4))
+
+np.zeros((4,4))
+
+np.ones((5,5))
+
+np.diag(np.identity(5))
+
+np.diag(np.identity(5))*.5
+
+0n = 6
+f = np.diag(np.ones(n))
+g = np.diag(np.ones(n-1),1)*.5
+h = np.diag(np.ones(n-1),-1)*.2
+
+f+g+h
+
+A
+
+A*0.5
+
+A/0.5
+
+vec1 = np.arange(1,10,0.1)
+
+id = range(1,4,1)
+
+A[id,id]
 
 
 ########################################################
@@ -209,9 +264,6 @@ A
 %???  Indexed empty matrix assignment is not allowed.
 %
 %
-##################################################################
-########### GOT TO HERE
-##################################################################
 %NOW LET US DO SOME MATRIX OPERATIONS
 %define a matrix B, also 4x4
 B=[1 1 2 1; 1 3 1 1; 2 4 5 1; 1 3 4 2]

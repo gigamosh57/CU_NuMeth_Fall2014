@@ -27,6 +27,11 @@ r2=(-b-sqrt(disc))/2/a;
 r=[r1 r2]'
 
 
+################################################
+###### Worked to here
+################################################
+
+
 %script example 4.m illustrates the organization of a sequential
 %calculation using two functions.
 %I want to take a,b and c from elements of the solution
@@ -196,3 +201,98 @@ detA=det(A);
 ################################################
 ###### Begin Python Code
 ################################################
+
+import numpy as np
+
+#example1- a script file to solve a system of linear equations
+#a script file is a collection of MATLAB commands organized in
+#a sequence.
+#Note: using ; at the end of a MATLAB command supresses display
+#of the result in the command window
+#
+#This script will not work unless a value for r is provided in the
+#command window first
+
+r = 1
+
+A=np.array([[5-r,2+r,1],[1,4-r,2],[3,2,1-r]])
+
+y=np.array([[1],[2],[3]])
+
+#Uses the \ in MATLAB to find inv(A)*y, which is the solution
+#to [A].x=y
+#x=A\y
+
+x1 = np.linalg.solve(A,y)
+x2 = np.dot(np.linalg.inv(A),y)
+
+#example 2- script for solving a quadratic equation
+#recall the formula for the roots of a quadratic equation
+#we'll evaluate the discriminant first
+
+#then the two roots
+
+#then group them in a vect
+a = 1
+
+b = -2
+
+c = 4
+
+disc=b^2-4*a*c
+
+print disc
+
+r1=(-b+np.sqrt(disc))/2/a
+
+r2=(-b-np.sqrt(disc))/2/a
+
+r=[r1,r2]
+
+print r
+
+# Function example
+def fib(n):
+	a, b = 0, 1
+	while b < n:
+		print b,
+		a, b = b, a+b
+		
+
+#function r=quad(a,b,c)
+#%same as example2.m, but written as a function
+#disc=b^2-4*a*c;
+#%then the two roots
+#r1=(-b+sqrt(disc))/2/a;
+#r1=(-b+sqrt(disc))/2/aa;
+#%then group them in a vector
+#r=[r1 r2]';
+
+#function r=quad(a,b,c)
+#%same as example2.m, but written as a function
+#disc=b^2-4*a*c;
+#%then the two roots
+#r1=(-b+sqrt(disc))/2/a;
+#r2=(-b-sqrt(disc))/2/a;
+#%then group them in a vector
+#r=[r1 r2]';
+
+
+
+import numpy as np
+def quad(a,b,c):
+	disc=b**2-4*a*c
+	r1=(-b+np.sqrt(disc))/2/a
+	r2=(-b-np.sqrt(disc))/2/a
+	r = [r1,r2]
+	return r
+def solution(r):
+    A=np.array([[5-r,2+r,1],[1,4-r,2],[3,2,1-r]])
+    y=np.array([[1],[2],[3]])
+    x = np.dot(np.linalg.inv(A),y)
+    return np.hstack(x).astype(float)
+x = solution(1)
+print x
+print quad(x[0],x[1],x[2])
+
+

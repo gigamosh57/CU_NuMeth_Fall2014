@@ -1,7 +1,5 @@
 import numpy as np
-
 import matplotlib.pyplot as plt
-
 #file = open("HW_2_output.txt","w")
 ## Problem 1
 #file.write("Prob 1 Results:"+"\n")
@@ -47,15 +45,21 @@ print y
 ## Problem 4
 #file.write("Prob 4 Results:"+"\n")
 import math
-import fsolve
 ##### NEED SCIPY FOR THIS TO WORK
 ##### INSTALL ANACONDA HERE
 ##### http://continuum.io/downloads
 from scipy.optimize import fsolve
-taneqn = lambda x : x * np.tan(x-3)
-bounds = [1.5,1.0]
+taneqn = lambda x : x * np.tan(x)-3
+bounds =  np.mean([1.5,1])
 ans = fsolve(taneqn,bounds)
 #file.write("ans: " + str(ans) + "\n"+"\n")
+
+## Problem 5.0 lambda functions
+n = 1
+g = lambda x: x*2 + n
+print g(2)
+   
+print f(8)
 
 ## Problem 5
 
@@ -69,15 +73,15 @@ from scipy.optimize import fsolve
 #file.write("Prob 5 Results:"+"\n")
 #r = np.arange(0,10.5,0.5)
 #tanroot = np.zeros(len(r))
-taneqn2 = lambda x : x * np.tan(x)-r
-bd = np.mean([math.pi,0])
-bd=0
-tanroot=[]
-rplot=[]
+taneqn2 = lambda x : x * np.tan(x) - r
+#bd = np.mean([math.pi/2,0])
+bd = np.mean([1.57,0])
+#bd=0
+tanroot=()
+rplot=()
 for r in np.arange(0,10.5,0.5):
-    list.append(tanroot,fsolve(taneqn2,bd))
-    list.append(rplot,r)
-
+    tanroot = tanroot + (fsolve(taneqn2,x0=bd,maxfev=1000),)
+    rplot = rplot + (r,)
 
 plt.plot(rplot,tanroot)
 plt.show()

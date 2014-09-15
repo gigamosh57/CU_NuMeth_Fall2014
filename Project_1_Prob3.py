@@ -5,7 +5,7 @@ import math
 # for plotting
 import matplotlib.pyplot as plt
 
-######## Bisectionsolver begins here
+######## Bisection solver begins here
 def proot(bounds,n = 1000,tol = 0.01): 
   it = 0
   i = 0
@@ -23,7 +23,8 @@ def proot(bounds,n = 1000,tol = 0.01):
       if (np.absolute(f(xmid)) < tol):
             i = n+1
   return it, xmid, f(xmid)
-######## Newton solver ends here
+  
+######## Bisection solver ends here
 
 
 
@@ -33,26 +34,27 @@ f = lambda x : x*np.tan(x)-3
 fprime = lambda x : np.tan(x) + x*(1/(np.cos(x)))**2
 
 ### Find initial guesses 
+inc = 0.1
+rng = np.arange(0,40,inc)
+a = zip(rng,rng+inc)
+n = 1000
+tol = 0.0000001
+
+guessinit = ()
+for g in a:
+#  print g
+  guess = list(g)
+  t = [f(guess[0]),f(guess[1])] 
+  if (all( item > 0 for item in t) or all( item <= 0 for item in t)) == False:
+    guessinit = guessinit + (guess,)
+
+### Loop through guesses and find roots
 xrt_all = ()
-for(guess in range):
+fxrt = ()
+for g in guessinit:
+  guess = list(g)
   it, xroot, f_xroot = proot(guess, n, tol)
   xrt_all = xrt_all + (xroot,)
-  
-  
-
-### Setup looped solution
-range = np.arange(0,0.1,40)
-tol = 0.000000001
-n = 50
+  fxrt = fxrt + (f_xroot,)
 
 
-  
-print "iterations: " + np.str(it)
-#### prints the following:
-#### "iterations: 6"
-print "first root lower than: " + np.str(guess) + " is " + np.str(xroot)
-#### prints the following:
-#### "first root lower than: 1.4 is 1.19245882934"
-print "at this root, the function evaluates as: " + np.str(f_xroot)
-#### prints the following:
-#### "at this root, the function evaluates as: -4.4408920985e-16"

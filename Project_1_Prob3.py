@@ -40,6 +40,7 @@ a = zip(rng,rng+inc)
 n = 1000
 tol = 0.0000001
 
+### Loop through range and find initial guesses:
 guessinit = ()
 for g in a:
 #  print g
@@ -56,5 +57,8 @@ for g in guessinit:
   it, xroot, f_xroot = proot(guess, n, tol)
   xrt_all = xrt_all + (xroot,)
   fxrt = fxrt + (f_xroot,)
+  
+  
+### Loop through results and find actual roots (not +/- infinity errors)
 
 

@@ -33,7 +33,11 @@ f = lambda x : x*np.tan(x)-3
 # Fprime
 fprime = lambda x : np.tan(x) + x*(1/(np.cos(x)))**2
 
+####################
+### Part (i)
 ### Find initial guesses 
+####################
+
 inc = 0.1
 rng = np.arange(0,40,inc)
 a = zip(rng,rng+inc)
@@ -49,6 +53,11 @@ for g in a:
   if (all( item > 0 for item in t) or all( item <= 0 for item in t)) == False:
     guessinit = guessinit + (guess,)
 
+####################
+### Part (ii)
+### Find roots for nearest guesses
+####################
+
 ### Loop through guesses and find roots
 xrt_all = ()
 fxrt = ()
@@ -58,7 +67,32 @@ for g in guessinit:
   xrt_all = xrt_all + (xroot,)
   fxrt = fxrt + (f_xroot,)
   
-  
-### Loop through results and find actual roots (not +/- infinity errors)
+####################
+### Part (iii)
+### Find which roots are not =/- inf
+####################
 
+### Loop through results and find first 10 roots (not +/- infinity errors)
+nroots = 10
+xrt_fin = ()
+pairs = zip(xrt_all,fxrt)
+it = 0
+while it <= nroots: 
+  for b in pairs:
+    print b
+    
+    
+    if np.absolute(b[1]) < tol:
+      xrt_fin = xrt_fin + (b[0],)
+      it = it + 1
+   
+####################
+### Print first 10 roots
+####################
+ 
+print list(xrt_fin)[0:nroots]
 
+### returns the following:
+##[1.1924588322639467, 3.8087622165679926, 6.7039557695388794, 9.7240274786949179,
+## 12.796648383140562, 15.894513058662415, 19.006108283996578, 22.125914359092711,
+## 25.250994122028352, 28.379652291536338]

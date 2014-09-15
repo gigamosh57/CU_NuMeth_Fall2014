@@ -1,7 +1,4 @@
-
-
-
-## This code calculates the roots of an equation from prob 5, hw 2
+#### NUMERICAL METHODS PROJECT 1, PROBLEM 2
 import numpy as np
 # For pi
 import math

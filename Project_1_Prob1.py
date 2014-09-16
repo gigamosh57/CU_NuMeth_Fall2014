@@ -22,7 +22,6 @@ def mynewton(guess,n = 1000,tol = 0.01):
       xnow = xnow + deltax
       if (np.absolute(f(xnow)) < tol):
             i = n+1
-      print xnow, f(xnow)
   return it, xnow, f(xnow)
 ######## Newton solver ends here
 
@@ -33,6 +32,8 @@ n = 50
 it, xroot, f_xroot = mynewton(guess, n, tol)
 
 print "iterations: " + np.str(it)
+#### this prints
+#### "iterations: 6"
 print "first root lower than: " + np.str(guess) + " is " + np.str(xroot)
 #### this prints
 #### "first root lower than: 2 is 0.48539431657"

@@ -1,4 +1,8 @@
-#### NUMERICAL METHODS PROJECT 1, PROBLEM 3
+#### Page Weil
+#### 9/15/14
+#### CVEN 5537
+#### PROJECT 1, PROBLEM 3
+
 import numpy as np
 # For pi
 import math
@@ -23,7 +27,6 @@ def proot(bounds,n = 1000,tol = 0.01):
       if (np.absolute(f(xmid)) < tol):
             i = n+1
   return it, xmid, f(xmid)
-  
 ######## Bisection solver ends here
 
 
@@ -79,9 +82,6 @@ pairs = zip(xrt_all,fxrt)
 it = 0
 while it <= nroots: 
   for b in pairs:
-    print b
-    
-    
     if np.absolute(b[1]) < tol:
       xrt_fin = xrt_fin + (b[0],)
       it = it + 1
@@ -89,10 +89,8 @@ while it <= nroots:
 ####################
 ### Print first 10 roots
 ####################
- 
-print list(xrt_fin)[0:nroots]
+
+print np.round(list(xrt_fin)[0:nroots],2)
 
 ### returns the following:
-##[1.1924588322639467, 3.8087622165679926, 6.7039557695388794, 9.7240274786949179,
-## 12.796648383140562, 15.894513058662415, 19.006108283996578, 22.125914359092711,
-## 25.250994122028352, 28.379652291536338]
+###[  1.19   3.81   6.7    9.72  12.8   15.89  19.01  22.13  25.25  28.38] 

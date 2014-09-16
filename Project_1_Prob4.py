@@ -54,28 +54,39 @@ for a in t:
 	x_25 = x_25 + (xnow,)
 
 v = x_01	
-xplot = np.arange(0,len(v),1)/float(len(v))
+xplot = np.arange(0,len(v),1)*20/float(len(v))
 plt.plot(xplot,v,color = "b")
 
 v = x_05	
-xplot = np.arange(0,len(v),1)/float(len(v))
+xplot = np.arange(0,len(v),1)*20/float(len(v))
 plt.plot(xplot,v,color = "g")
 
 v = x_1
-xplot = np.arange(0,len(v),1)/float(len(v))
+xplot = np.arange(0,len(v),1)*20/float(len(v))
 plt.plot(xplot,v,color = "r")
 
 v = x_2
-xplot = np.arange(0,len(v),1)/float(len(v))
+xplot = np.arange(0,len(v),1)*20/float(len(v))
 plt.plot(xplot,v,color = "c")
 
 v = x_25
-xplot = np.arange(0,len(v),1)/float(len(v))
+xplot = np.arange(0,len(v),1)*20/float(len(v))
 plt.plot(xplot,v,color = "m")
 
 plt.show()
 
-### This plot show s
+### This plot shows the following behaviors:
+# dt = 0.1, Solution converges to zero over time
+# dt = 0.5, Solution converges to zero over time but converges to zero more quickly 
+#  (this convergence is probably due to the larger steps)
+# dt = 1, Result is always zero.  Since the initial condition is equal to 1, the 
+#   function gets zero as its first answer and cannot diverge or converge further
+# dt = 2, Result is an oscillation between -1 and 1.  This is because the convergence always 
+#   attempts to move closer to zero but, because dt = x0 * 2 the function moves around zero 
+#   back and forth to infinity
+# dt = 2.5, Result is an oscillation positive and negative numbers that diverges over time.  
+#   Every time the function moves closer to zero it moves farther and it moves past zero
+
 
 
 

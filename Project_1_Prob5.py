@@ -1,13 +1,15 @@
-#### NUMERICAL METHODS PROJECT 1, PROBLEM 5
+#### Page Weil
+#### 9/15/14
+#### CVEN 5537
+#### PROJECT 1, PROBLEM 5
+
 import numpy as np
 # For pi
 import math
 # for plotting
 import matplotlib.pylab as plt
 
-
 thetasum = lambda x, n, t : (np.sin(((2*n+1)*np.pi*x)/(2*L))*np.exp(-1*(((2*n+1)**2)*(np.pi**2)*alpha*t)/(4*L**2)))/((2*n+1)*math.pi)
-
 
 #### Part (a), use for loops
 
@@ -39,6 +41,7 @@ for p in np.arange(0,len(thetas[:,1])):
 	plt.plot(xeval,thetas[p,:])
 
 plt.show()
+
 
 #### Part (b), do summation with matrix capabilities
 

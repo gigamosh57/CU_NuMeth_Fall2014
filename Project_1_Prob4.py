@@ -1,4 +1,8 @@
-#### NUMERICAL METHODS PROJECT 1, PROBLEM 4
+#### Page Weil
+#### 9/15/14
+#### CVEN 5537
+#### PROJECT 1, PROBLEM 4
+
 import numpy as np
 # For pi
 import math
@@ -69,22 +73,24 @@ v = x_2
 xplot = np.arange(0,len(v),1)*20/float(len(v))
 plt.plot(xplot,v,color = "c")
 
+#plt.show()
+
 v = x_25
 xplot = np.arange(0,len(v),1)*20/float(len(v))
 plt.plot(xplot,v,color = "m")
 
 plt.show()
 
-### This plot shows the following behaviors:
-# dt = 0.1, Solution converges to zero over time
-# dt = 0.5, Solution converges to zero over time but converges to zero more quickly 
+### The two plots shows the following behaviors:
+# dt = 0.1, blue, Solution converges to zero over time
+# dt = 0.5, green, Solution converges to zero over time but converges to zero more quickly 
 #  (this convergence is probably due to the larger steps)
-# dt = 1, Result is always zero.  Since the initial condition is equal to 1, the 
+# dt = 1, red, Result is always zero.  Since the initial condition is equal to 1, the 
 #   function gets zero as its first answer and cannot diverge or converge further
-# dt = 2, Result is an oscillation between -1 and 1.  This is because the convergence always 
+# dt = 2, cyan, Result is an oscillation between -1 and 1.  This is because the convergence always 
 #   attempts to move closer to zero but, because dt = x0 * 2 the function moves around zero 
 #   back and forth to infinity
-# dt = 2.5, Result is an oscillation positive and negative numbers that diverges over time.  
+# dt = 2.5, magenta, Result is an oscillation positive and negative numbers that diverges over time.  
 #   Every time the function moves closer to zero it moves farther and it moves past zero
 
 

@@ -1,4 +1,8 @@
-#### NUMERICAL METHODS PROJECT 1, PROBLEM 2
+#### Page Weil
+#### 9/15/14
+#### CVEN 5537
+#### PROJECT 1, PROBLEM 2
+
 import numpy as np
 # For pi
 import math
@@ -17,11 +21,8 @@ def mynewton(guess,n = 1000,tol = 0.01):
       xnow = xnow + deltax
       if (np.absolute(f(xnow)) < tol):
             i = n+1
-      print xnow, f(xnow)
   return it, xnow, f(xnow)
 ######## Newton solver ends here
-
-
 
 # Define First Function
 f = lambda x : x**3 - np.cos(3*x)
@@ -29,7 +30,7 @@ f = lambda x : x**3 - np.cos(3*x)
 fprime = lambda x : 3*x**2 + 3*np.sin(3*x)
 
 ### Solve with initial guess
-guess = 2
+guess = 1.4
 tol = 0.000000001
 n = 50
 it, xroot, f_xroot = mynewton(guess, n, tol)
@@ -38,7 +39,7 @@ print "iterations: " + np.str(it)
 #### "iterations: 6"
 print "first root lower than: " + np.str(guess) + " is " + np.str(xroot)
 #### prints the following:
-#### "first root lower than: 2 is 0.48539431657"
+#### "first root lower than: 1.4 is 0.48539431657"
 print "at this root, the function evaluates as: " + np.str(f_xroot)
 #### prints the following:
 #### "at this root, the function evaluates as: -8.32667268469e-17"

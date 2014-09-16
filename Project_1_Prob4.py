@@ -1,4 +1,4 @@
-#### NUMERICAL METHODS PROJECT 1, PROBLEM 3
+#### NUMERICAL METHODS PROJECT 1, PROBLEM 4
 import numpy as np
 # For pi
 import math

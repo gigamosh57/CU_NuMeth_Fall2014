@@ -1,0 +1,175 @@
+\documentclass{article}
+
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{amscd}
+\usepackage{amssymb}
+\usepackage[tableposition=top]{caption}
+\usepackage{ifthen}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{float}
+\usepackage[bookmarks]{hyperref}
+\usepackage{Sweave}
+\usepackage{multicol} % Used for the two-column layout of the document
+\linespread{1.5}
+
+
+
+
+\begin{document}
+\title{CVEN 5537 - Numerical Methods - Homework 3}
+
+\author{Page Weil}
+\maketitle
+\title{}
+
+\hline
+
+\section*{Problem 1}
+The following system of second-order ODEs describes a system of two masses
+connected by springs and sliding on a frictionless surface. Express these ODEs
+as a system of first order ODEs:
+
+$m_{1}\frac{d^{2}x_{1}}{dt^{2}} = -k_{1}x_{1}+k_{2}(x_{2}-x_{1})$
+
+$m_{2}\frac{d^{2}x_{2}}{dt^{2}} = -k_{2}(x_{2}-x_{1})$
+
+First we define:
+
+$y_{1} = x_{1}$, $y_{2} = \frac{dx_{1}}{dt}$, $y_{3} = \frac{d^{2}x_{1}}{dt^{2}}$ 
+
+$z_{1} = x_{2}$, $z_{2} = \frac{dx_{2}}{dt}$, $z_{3} = \frac{d^{2}x_{2}}{dt^{2}}$
+
+Then define the set of equations:
+
+$\frac{dy_{1}}{dt} = y_{2}$
+
+$\frac{dy_{2}}{dt} = y_{3}$
+
+$\frac{dy_{3}}{dt} = \frac{-1}{m_{1}}\left(k_{1}y_{1}+k_{2}(z_{1}-y_{1})\right)$
+
+$\frac{dz_{1}}{dt} = z_{2}$
+
+$\frac{dz_{2}}{dt} = z_{3}$
+
+$\frac{dz_{3}}{dt} = \frac{-1}{m_{2}}\left(k_{2}(z_{2}-y_{1})\right)$
+
+\vspace{5mm}
+
+\section*{Problem 2}
+
+Consider the Gear-closed method formula of order 2 for $U^{n+1}$ from Table B.5
+in the handout. Compare to the exact Taylor series expansion for $U^{n+1}$ and
+confirm that the L.T.E is of order $\delta t^{3}$. 
+
+Taylor series expansion:
+
+$x(t+\Delta t) = x(t) + \frac{dx}{dt}\left |^{n}\Delta t + \frac{d^{2}x}{dt^{2}}\left |^{n}\frac{\Delta t^{2}}{2!} + \frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!}+...$
+
+Gear closed method order 2 expansion for $x(t+\Delta t)$:
+
+$x^{n+1} = \frac{1}{A_{p}}\left(\Delta t \alpha_{n+1}F^{n+1}+ \beta_{n}x^{n} + \beta_{n-1}x^{n-1}  \right)$
+
+The associated coefficients are: $A_{p} = 3$, $\alpha_{n+1} = 2$, $\beta_{n} =
+4$, $\beta_{n-1} = -1$ so we have:
+
+$x^{n+1} = \frac{1}{3}\left(2\Delta t f^{n+1}+ 4x^{n} - x^{n-1}  \right)$
+
+$x^{n+1} = \left(\frac{2\Delta t}{3} f^{n+1}+ \frac{4}{3}x^{n} - \frac{x^{n-1}}{3}  \right)$
+
+Subtracting this estimate from the Taylor series to find the LTE:
+
+$x(t+\Delta t) = \left(-\frac{2\Delta t}{3} f^{n+1} - \frac{4}{3}x^{n} + \frac{x^{n-1}}{3}  \right) + x(t) + \frac{dx}{dt}\left |^{n}\Delta t +
+\frac{d^{2}x}{dt^{2}}\left |^{n}\frac{\Delta t^{2}}{2!} + \frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!}+...$
+
+Where:
+
+$f^{n+1} = f^{n} + \frac{df}{dt}\left |^{n}\Delta t +
+\frac{d^{2}f}{dt^{2}}\left |^{n}\frac{\Delta t^{2}}{2!} + \frac{d^{3}f}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!} + ...$
+
+$ = f^{n} + \frac{df}{dt} + \frac{dx}{dt}\left |^{n}\Delta t +
+\frac{d^{2}x}{dt^{2}}\left |^{n}\frac{\Delta t^{2}}{2!} + \frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!} + ...$
+
+$ = \frac{dx}{dt} + \frac{d^{2}x}{dt^{2}}\left |^{n}\Delta t +
+\frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{2}}{2!} + ...$
+
+Also:
+
+$x^{n-1} = x^{n} - \frac{dx}{dt}\left |^{n}\Delta t +
+\frac{d^{2}x}{dt^{2}}\left |^{n}\frac{\Delta t^{2}}{2!} + \frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!} + ...$
+
+Plugging in we find:
+
+$x(t+\Delta t) = \left(-\frac{2\Delta t}{3} (\frac{dx}{dt} + \frac{d^{2}x}{dt^{2}}\left |^{n}\Delta t +
+\frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{2}}{2!} + ...) - \frac{4}{3}x^{n} + \frac{1}{3}(x^{n} - \frac{dx}{dt}\left |^{n}\Delta t +
+\frac{d^{2}x}{dt^{2}}\left |^{n}\frac{\Delta t^{2}}{2!} + \frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!} + ...)  \right) 
++ x(t) + \frac{dx}{dt}\left |^{n}\Delta t +
+\frac{d^{2}x}{dt^{2}}\left |^{n}\frac{\Delta t^{2}}{2!} + \frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!}+...$
+
+Which then cancels to:
+
+$LTE = \left(-\frac{2\Delta t}{3} (
+\frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{2}}{2!} + ...) + \frac{1}{3}( \frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!} + ...)  \right) +
+\frac{d^{3}x}{dt^{3}}\left |^{n}\frac{\Delta t^{3}}{3!}+...$
+
+Since all terms have $\Delta t$ with exponent 3 or higher, $O(\Delta t^3)$
+
+\vspace{5mm}
+
+\section*{Problem 3}
+
+Consider the weighted Euler method: $x^{n+1} = x^{n} + (\theta f^{n} +
+(1-\theta) f^{n+1})\Delta t$. Note that with $\theta = 1/2$, you get the
+Adams-Moulton $p=2$ formula,  with $\theta = 1$ you get EF and $\theta = 0$ gives you
+EB. Determine the amplification factor $\lambda$ and analyze the stability of the
+weighted Euler method for the model equation $\frac{dx}{dt}=-ax$, in terms of $\Delta t$ and $\theta$.
+As it turns out, the weighted Euler method is unconditionally stable (i.e. stable for
+any $\Delta t > 0$) when $0 \leq 1/2$. Show that this is true.
+
+Substitute $x^{n} = x_{0}*\lambda^{n}$ and where $f^{n} = -ax^{n} = -ax_{0}\lambda^{n}$
+
+$\lambda^{n+1}x_{0} = x_{0}*\lambda^{n} + (\theta (-ax_{0}\lambda^{n}) +
+(1-\theta) (-ax_{0}\lambda^{n+1}))\Delta t$
+
+Set $n = 0$:
+
+$\lambda x_{0} = x_{0} + (\theta (-ax_{0}) +
+(1-\theta) (-ax_{0}\lambda))\Delta t$
+
+$\lambda = 1 + (\theta (-a) +
+(1-\theta) (-a\lambda))\Delta t$
+
+$\lambda = 1 - a\theta \Delta t - a\lambda \Delta t + a\lambda\Delta t\theta$
+
+$\lambda(1+ a \Delta t - a\Delta t\theta)= 1 - a\theta \Delta t$
+
+$\lambda = \frac{1 - a\theta \Delta t}{(1+ a \Delta t - a\Delta t\theta)}$
+
+This is unconditionally stable if $abs{\lambda} < 1$ therefore:
+
+$-1 < \frac{1 - a\theta \Delta t}{(1+ a \Delta t - a\Delta t\theta)} < 1$
+
+$-1 < \frac{1 - a\theta \Delta t}{(1+ a \Delta t - a\Delta t\theta)}$
+
+$-(1+ a \Delta t - a\Delta t\theta) < 1 - a\theta \Delta t$
+
+$a \Delta t + 2  >  a\theta \Delta t + a\Delta t\theta$
+
+$\frac{a \Delta t + 2}{(a\Delta t + a\Delta t)}  >  \theta $
+
+$\frac{1}{2} + \frac{1}{(a\Delta t)}  >  \theta $
+
+Since this is true, the function is unconditionally stable so long as $\theta >
+1/2$.  Also, since it is not possible for $a\Delta t < 0$, $\Delta t$ has no
+impact on the stability.
+
+\vspace{5mm}
+
+\section*{Problem 4}
+
+See attached python script
+
+\end{document}
+
+

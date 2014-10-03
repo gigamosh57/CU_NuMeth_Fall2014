@@ -6,9 +6,12 @@
 import numpy as np
 # For pi
 import math
+# for erf
+import scipy.special as sp
 # for plotting
 import matplotlib.pyplot as plt
 
+################################################
 ######## Newton  solver begins here
 def mynewton(guess,n = 1000,tol = 0.01): 
   it = 0
@@ -23,31 +26,54 @@ def mynewton(guess,n = 1000,tol = 0.01):
             i = n+1
   return it, xnow, f(xnow)
 ######## Newton solver ends here
+################################################
 
-# Define First Function
-f = lambda x : x*t - x**3
-# Fprime
-fstep = lambda x : x*t - x**3 - xold
+# Define f
+f_eb = lambda x : x*t - x**3
 
-### Solve with initial guess
-guess = 1.4
-tol = 0.000000001
-n = 50
-it, xroot, f_xroot = mynewton(guess, n, tol)
+# Input this function into the EB method.  Every timestep, you need to solve:
+#  x^n+1 - f^n+1*dt - x^n = 0
+# converting this to a form that can be input into the Newton solver:
+# f
+f = lambda x : x - (x*t - x**3)*dt - xold
+# fprime
+fprime = lambda x : 1 - (t - 3*x**2)*dt
 
+# Define timesteps
 iter = 40
-tstep = 0.1
-steps = np.arange(tstep,iter) #should be 40 steps
+dt = 0.1
+steps = np.arange(0,dt*iter,dt) #should be 40 steps
 
 x0 = 1
 xold = x0
-for a in steps:
+xnews = ()
+for t in steps:
+  guess = xold
+  xnew = mynewton(guess)
   # SOLVE fstep for xnew
+  it, xnew, f_xroot = mynewton(guess)
   # Store xnew in list
-  # xold = xnew
-  
-# plot results
+  xnews = xnews + (xnew,)
+  xold = xnew
 
+# Using Wolfram Alpha to determine the analytical solution we find:
+# x = np.exp(t**2/2)/np.sqrt(np.sqrt(np.pi*np.erfi(t)+1))
+
+t_an = steps
+x_an = np.exp(t_an**2/2)/np.sqrt(np.sqrt(np.pi)*sp.erfi(t_an)+1)
+
+# Plot results
+
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+axes.set_xlabel('t')
+axes.set_ylabel('x(t), x0 = 1')
+
+axes.plot(steps,x_an,color = "blue",label = "analytical")
+axes.plot(steps,list(xnews),color = "red",label = "numerical")
+
+axes.legend()
+plt.show()
 
 
 

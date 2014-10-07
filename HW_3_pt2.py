@@ -46,8 +46,8 @@ steps = np.arange(0,dt*iter,dt) #should be 40 steps
 
 x0 = 1
 xold = x0
-xnews = ()
-for t in steps:
+xnews = (x0,)
+for t in steps[1:]:
   guess = xold
   xnew = mynewton(guess)
   # SOLVE fstep for xnew

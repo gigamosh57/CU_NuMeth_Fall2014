@@ -67,7 +67,7 @@ def myrk4(f,x0,tstart,tfinal,dt):
 
 #### Begin Problem 1
 
-dts = [0.001,0.01,0.02,0.05,0.1,0.2,0.5]#np.arange(0.01,1,0.01)
+dts = [0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5]#np.arange(0.01,1,0.01)
 gte1 = []
 gte2 = []
 
@@ -76,13 +76,14 @@ for a in dts:
   tvec, xsol = myrk4(f,1,0,1,a)
   # This is the analytical solution for f = -x
   fana = lambda t: np.exp(-1*np.array(t))
-  gte1 = gte1 + [sum(xsol - fana(tvec))]
+  gte1 = gte1 + [xsol[len(xsol)-1] - fana(tvec[len(xsol)-1])]
   
   f = lambda t,x: -x**2  
   tvec, xsol = myrk4(f,1,0,1,a)
   # This is the analytical solution for f = -x^2
   fana = lambda t: 1/(1+np.array(t))
-  gte2 = gte2 + [sum(xsol - fana(tvec))]
+  #gte2 = gte2 + [sum(xsol - fana(tvec))]
+  gte2 = gte2 + [xsol[len(xsol)-1] - fana(tvec[len(xsol)-1])]
 
 fig = plt.figure()
 axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
@@ -91,13 +92,13 @@ py = np.log(dts)
 
 axes.plot(px,py,'ro',label="f = -x")
 fit = np.polyfit(px,py,1)
-axes.plot(px,fit[0]*px+fit[1],label="slope = ")
+axes.plot(px,fit[0]*px+fit[1],label="slope = " + str(1/fit[0]))
 
 px = np.log(gte2)
 py = np.log(dts)
 axes.plot(px,py,'bo',label="f = -x^2")
 fit = np.polyfit(px,py,1)
-axes.plot(px,fit[0]*px+fit[1],label="slope = ")
+axes.plot(px,fit[0]*px+fit[1],label="slope = " + str(1/fit[0]))
 
 axes.set_xlabel('ln(GTE)')
 axes.set_ylabel('ln(delta t)')
@@ -106,11 +107,3 @@ plt.show()
 
 #Based on the slope in the picture shown, we have found that the error of RK4 is o(delta t ^5)
 
-
-
-
-
-
-
-  
-  

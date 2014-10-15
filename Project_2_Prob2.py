@@ -15,21 +15,27 @@ import matplotlib.pyplot as plt
 def pagerkck4(feval,x0,tstart,tfinal,dt,ord = 4,tol=10**-6):
   # INITIALIZE ARRAY OF CASH-KARP FACTORS
   ck_a = [[0],[1/5.],[3/10.],[3/5.],[1.],[7/8.]]
-  ck_b = np.array([[0,0,0,0,0],
-                  [1/5.,0,0,0,0],
-		              [3/40.,9/40.,0,0,0],
-		              [3/10.,-9/10.,6/5.,0,0],
-		              [-11/54.,5/2.,-70/27.,35/27.,0],
-		              [1631/55296.,175/512.,575/13824.,44275/110592.,253/4096.],
-		              ])
+	ck_b = np.array([[0,0,0,0,0],
+				  [1/5.,0,0,0,0],
+					  [3/40.,9/40.,0,0,0],
+					  [3/10.,-9/10.,6/5.,0,0],
+					  [-11/54.,5/2.,-70/27.,35/27.,0],
+					  [1631/55296.,175/512.,575/13824.,44275/110592.,253/4096.],
+					  ])
   ck_c =  [[37/378.],[0.],[250/621.],[125/594.],[0.],[512/1771.]]
   ck_cs = [[2825/27648.],[0.],[18575/48384.],[13525/55296.],[277/14336.],[1/4.]]
+  
+  ck_a = ck_a[range(0,ord)]
+  ck_b = ck_b[range(0,ord),][:,range(0,ord)]
+  ck_c = ck_c[range(0,ord)]
+  ck_cs = ck_cs[range(0,ord)]
   
   #initialize time vector
   tvec=[tstart]
   #initialize x, initialize solution matrix xsol
   x=x0
   xsol=[] + [x,]
+  ts = []
   
   # SINCE THIS FUNCTION USES ADAPTIVE TIMESTEPPING
   # THE TIME VECTOR IS NOT DEFINED INITIALLY
@@ -38,6 +44,7 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,ord = 4,tol=10**-6):
     # RESET INITIAL DT
     h = dt
     
+	xs = []
     ## WHILE ERROR IS ABOVE THRESHOLD
     while error > tol:
       
@@ -52,31 +59,29 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,ord = 4,tol=10**-6):
         
         # EVALUATES F DEPENDING ON LEVEL
         for fn in feval:
-          f.append(fn(x+ck_b[range(0,(klev-1))]*k,t+ck_a[klev]))
+			f.append(fn(x+ck_b[range(0,(klev-1))]*k,t+ck_a[klev]))
         k = list.append(h*f)
-      k2 = h*f*(x + 
+		
+	  # CALCULATE x values
+      xnew = x + ck_a*k
+	  xs = x + ck_cs*k
+	  
+	  # ESTIMATE ERROR
+	  error = max(np.abs((xnew-xs)/xs))
+	  hnew = h*(error/tol)**(0.2)
+	  # ADJUST DT
+	  h = hnew
     
-     # ESTIMATE ERROR
+    # STORE SOLUTION (we assume XS is better)
+	xsol = xsol + [xs]
+	
+	# ADJUST TIME BY H
+	t = t + h 
+	tvec = tvec + [t]
+	ts = ts + [h]
+
     
-     # ADJUST DT
-    
-    # ADJUST TIME BY H
-    t = t + h 
-    
-  
-    #stage 1
-    k1=f(t,x)*dt;
-    #stage 2
-    k2=f(t+dt/2,x+k1/2)*dt;
-    #stage 3
-    k3=f(t+dt/2,x+k2/2)*dt;
-    #stage 4
-    k4=f(t+dt,x+k3)*dt;
-    #calculate x at next time-step (using same variable name x, I don't need xold, xnew etc.)
-    x=x+(k1+2*k2+2*k3+k4)/6;
-    #update time vector and xsol matrix
-    tvec=tvec + [t+dt]
-    xsol=xsol + [x]
-  return tvec,xsol
-######## RK4 ODE solver ends here
+  return tvec,xsol,ts
+######## Solver ends here
 ################################################
+

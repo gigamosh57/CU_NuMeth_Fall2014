@@ -117,12 +117,10 @@ m1 = 1
 m2 = 1
 
 feval = [lambda x,t: x[1,0],
-         lambda x,t: x[2,0],
-         lambda x,t: -1/m1*(k1*x[0,0]+k2*(x[3,0]-x[0,0])),
+         lambda x,t: -1/m1*(k1*x[0,0]+k2*(x[0,0]-x[2,0])),
          lambda x,t: x[3,0],
-         lambda x,t: x[4,0],
-         lambda x,t: -1/m2*(k2*(x[4,0]-x[0,0]))]
-x0 =  [0,0,0,1,0,0]
+         lambda x,t: 1/m2*(k2*(x[0,0]-x[2,0]))]
+x0 =  [0,0,1,0]
 tstart = 0
 tfinal = 10
 dt = (tfinal-tstart)/1000.

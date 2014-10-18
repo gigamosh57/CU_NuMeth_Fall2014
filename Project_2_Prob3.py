@@ -1,5 +1,15 @@
 ####################################################################
- ######## Runge-Kutta ODE solver with Cash-Karp 4th-5th order params
+######## INITIALIZE PYTHON
+import numpy as np
+# For pi
+import math
+# for plotting
+import matplotlib.pyplot as plt
+######## 
+####################################################################
+
+####################################################################
+######## Runge-Kutta ODE solver with Cash-Karp 4th-5th order params
 
 def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
    # INITIALIZE ARRAY OF CASH-KARP FACTORS
@@ -97,22 +107,22 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
 
 
 ################################################
-######## Define inputs for the pred-prey model
+######## Define inputs for the  spring mass problem
 
-import numpy as np
-# For pi
-import math
-# for plotting
-import matplotlib.pyplot as plt
 
-a = 1    # 1    # 5
-b = 0.5  # 0.5  # 1
-c = 0.05 # 0.05 # 1
-d = 0.02 # 0.02 # 1
 
-feval = [lambda x,t: a*x[0,0]-c*x[0,0]*x[1,0], 
-      lambda x,t: d*x[0,0]*x[1,0]-b*x[1,0]]
-x0 =  [100,10]
+k1 = 0.01
+k2 = 1
+m1 = 1
+m2 = 1
+
+feval = [lambda x,t: x[1,0],
+         lambda x,t: x[2,0],
+         lambda x,t: -1/m1*(k1*x[0,0]+k2*(x[3,0]-x[0,0])),
+         lambda x,t: x[3,0],
+         lambda x,t: x[4,0],
+         lambda x,t: -1/m2*(k2*(x[4,0]-x[0,0]))]
+x0 =  [0,0,0,1,0,0]
 tstart = 0
 tfinal = 10
 dt = (tfinal-tstart)/1000.
@@ -127,10 +137,7 @@ errtol = 10**-20
 ######## test solver with function here:
 
 
-tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,order = 3)
-
-######## End solver function input here
-################################################
+#tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,order = 3)
 
 ################################################
 ######## test solver without function here
@@ -156,7 +163,7 @@ tvec=[tstart]
 #initialize x, initialize solution matrix xsol
 x0 = np.array([x0]).T
 x=x0
-xsol = np.empty((2,0),float)
+xsol = np.empty((np.max(np.shape(x0)),0),float)
 xsol = np.append(xsol,x0,axis=1)
 ts = [0]
 
@@ -276,9 +283,10 @@ while t < tfinal:# and it1 < 20:
 #plt.show() 
 
 
+######## End solver function input here
+################################################
 
 
-
-plt.plot(xsol[0,:],xsolf[0,:])
-plt.plot(xsol[1,:],-1*xsolf[1,:])
+plt.plot(tvec,xsol[0,:])
+plt.plot(tvec,xsol[1,:])
 plt.show() 

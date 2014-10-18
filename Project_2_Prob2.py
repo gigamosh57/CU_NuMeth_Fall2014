@@ -19,18 +19,18 @@ import math
 # for plotting
 import matplotlib.pyplot as plt
 
-a = 1    # 5
-b = 0.5  # 1
-c = 0.05 # 1
-d = 0.02 # 1
+a = 1    # 1    # 5
+b = 0.5  # 0.5  # 1
+c = 0.05 # 0.05 # 1
+d = 0.02 # 0.02 # 1
 
 feval = [lambda x,t: a*x[0,0]-c*x[0,0]*x[1,0], 
       lambda x,t: d*x[0,0]*x[1,0]-b*x[1,0]]
 x0 =  [100,10]
 tstart = 0
 tfinal = 100
-dt = (tfinal-tstart)/1000.
-order = 2
+dt = (tfinal-tstart)/10000.
+order = 4
 
 #tvec,xsol,ts = pagerkck4(feval,x0,tstart,tfinal,dt,ord = 4,tol=10**-6)
 
@@ -63,29 +63,34 @@ ts = [0]
 
 # SINCE THIS FUNCTION USES ADAPTIVE TIMESTEPPING
 # THE TIME VECTOR IS NOT DEFINED INITIALLY
-tol=10**-2
+tol=10**-3
+errtol = 10**-20
 t = tstart
 h = dt
 
 it1 = 0
 errvec = []
-while t < tfinal:# and it1 < 100:
-   if t == round(t,1): print('t: '+str(t))
+while t < tfinal:# and it1 < 20:
+#   if round(t,2) == round(t,1): print('t: '+str(t))
    it1 = it1 + 1	
    #print(1)
    
-   ## RESET ERROR
+   ## RESET VALUES
    error = tol*1.01
    it2 = 0
    xs = []
    xn = []
    hvec = []
+   #h = dt
    
    xnvec = []
    xsvec = []
-   while error > tol and it2 < 10:
+   errloop = 0
+   #while error > tol and it2 < 5:
+   while errloop == 0:# and it2 < 10:
       it2 = it2 + 1
       # EVALUATE STAGES
+      #id 6      
       f = np.empty((0,1),float)
       for fn in feval:
          #print(4)
@@ -96,48 +101,66 @@ while t < tfinal:# and it1 < 100:
       
       # LOOPS THROUGH ALL K VALUES DEPENDING ON ORDER OF FUNCTION
       for klev in range(1,order):
+         #indent 3
          # CALCULATES F FOR ALL FUNCTIONS IN FEVAL
          f = np.empty((0,1),float)
          # EVALUATES F DEPENDING ON LEVEL OF K
          for fn in feval:
             cb = np.array([ck_b[klev,range(0,klev)]])
             ca = ck_a[klev]
-            f = np.append(f,fn(x+cb*k,t+ca*h))
+            kev = k[:,range(0,klev)]
+            f = np.append(f,fn(x+np.array([np.sum(cb*kev,axis=1)]).T,t+ca*h))
+         
          f = np.array([f]).T
          k = np.append(k,h*f,axis = 1)
          # End for klev
-         
-      # CALCULATE x values
+         #indent 3
+      # id 6
       
-      xnew = np.sum(x + ck_c.T*k,axis = 1)
+      # CALCULATE x values
+      xnew = np.sum(x + np.array([np.sum(ck_c.T*k,axis = 1)]).T,axis = 1)
+      xs = np.sum(x + np.array([np.sum(ck_cs.T*k,axis=1)]).T , axis = 1)
+      
       xnvec = np.append(xnvec,xnew)
-      xs = np.sum(x + ck_cs.T*k,axis=1)
       xsvec = np.append(xsvec,xs)
       
       # ESTIMATE ERROR
-      error = np.amax(np.absolute(xnew-xs))
+      abserror = np.absolute(xnew-xs)
+      relerror = np.zeros((2,1))
+      for i in range(0,len(xnew)): 
+         if xnew[i] > errtol: relerror[i] = np.absolute((xnew[i] - xs[i])/xnew[i])
+      
+      #error = np.amin([np.absolute(np.amax(tol/abserror)),np.absolute(np.amax(tol/relerror))])
+      error = np.amax(np.amax(abserror),np.amax(relerror))
+      #error  = np.amax(np.absolute(xnew-xs))
       
       # ADJUST H BASED ON ERROR
       hnew = h*(tol/error)**(0.2)
+      hvec = hvec + [hnew]
+      if hnew > h*1.2: hnew=h*1.2
       h = hnew
+      if error < tol: errloop = 1
       
-      #error = tol*.9
+      #print('error: ' + str(error))
+      
       
       #print('klev: ' + str(klev))
       #print('k: ' + str(k))
       #error = tol - 0.1
       ### End while error > tol
    
+   h = hnew
    #print("iter err: " + str(it2))
    #errvec = errvec + [error]      
-   print('h: ' + str(h))
-  # print('error: ' + str(error))
+   #print('h: ' + str(h))
+   #print('error: ' + str(error))
    #print('f: ' + str(f))
    #print('xnew: ' + str(xnew))
    #print('xs: ' + str(xs))
    
    # STORE VALUES FROM ADAPTIVE TIMESTEPPING
    x = np.reshape(xnew,(-1,1))
+   
    # STORE SOLUTION (we assume XNEW is better)
    xsol = np.append(xsol,x,axis = 1)
    #print('x = '+str(x))
@@ -148,7 +171,7 @@ while t < tfinal:# and it1 < 100:
    ts = ts + [h]
    
    # Set starting h for next timestep (max increase)
-   h = 1.2*h
+   #h = 1.2*h
    
    ### End while time < tfinal
    

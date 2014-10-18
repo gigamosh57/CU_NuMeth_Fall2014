@@ -36,12 +36,6 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
       
       ## RESET VALUES
       error = tol*1.01
-      xs = []
-      xn = []
-      hvec = []
-      
-      xnvec = []
-      xsvec = []
       errloop = 0
       while errloop == 0:
          # EVALUATE STAGES
@@ -84,19 +78,15 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
          if hnew > h*1.2: hnew=h*1.2
          h = hnew
          if error < tol: errloop = 1
-         ### End while error > tol
+         ### End while errloop = 0
       
+      # UPDATE ALL VALUES FOR NEXT TIMESTEP
       h = hnew
-      # STORE VALUES FROM ADAPTIVE TIMESTEPPING
       x = np.reshape(xnew,(-1,1))
-      
-      # STORE SOLUTION (we assume XNEW is better)
       xsol = np.append(xsol,x,axis = 1)
-      # ADJUST TIME BY H
       t = t + h 
       tvec = tvec + [t]
       ts = ts + [h]
-      
       ### End while time < tfinal
       
    return tvec,xsol,ts

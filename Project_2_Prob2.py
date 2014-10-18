@@ -1,4 +1,13 @@
+####################################################################
+ ######## Runge-Kutta ODE solver with Cash-Karp 4th-5th order params
+ 
+#def pagerkck4(feval,x0,tstart,tfinal,dt,ord = 4,tol=10**-6):
 
+#### Solver code goes here
+
+#   return tvec,xsol,ts
+######## Solver ends here
+################################################
 
 
 ################################################
@@ -10,18 +19,18 @@ import math
 # for plotting
 import matplotlib.pyplot as plt
 
-a = 1
-b = 0.5
-c = 0.05
-d = 0.02
+a = 1    # 5
+b = 0.5  # 1
+c = 0.05 # 1
+d = 0.02 # 1
 
 feval = [lambda x,t: a*x[0,0]-c*x[0,0]*x[1,0], 
       lambda x,t: d*x[0,0]*x[1,0]-b*x[1,0]]
-x0 =  [0,1]
+x0 =  [100,10]
 tstart = 0
-tfinal = 20
+tfinal = 100
 dt = (tfinal-tstart)/1000.
-order = 4
+order = 2
 
 #tvec,xsol,ts = pagerkck4(feval,x0,tstart,tfinal,dt,ord = 4,tol=10**-6)
 
@@ -49,95 +58,115 @@ tvec=[tstart]
 x0 = np.array([x0]).T
 x=x0
 xsol = np.empty((2,0),float)
-xsol = np.append(xsol,x,axis=1)
+xsol = np.append(xsol,x0,axis=1)
 ts = [0]
 
 # SINCE THIS FUNCTION USES ADAPTIVE TIMESTEPPING
 # THE TIME VECTOR IS NOT DEFINED INITIALLY
-ord = 4
 tol=10**-2
 t = tstart
 h = dt
 
 it1 = 0
-while t < tfinal and it1 < 100:
+errvec = []
+while t < tfinal:# and it1 < 100:
+   if t == round(t,1): print('t: '+str(t))
    it1 = it1 + 1	
    #print(1)
-   # RESET INITIAL DT FOR EACH TIMESTEP
-   print 'oldtime, ' + str(h)
-   h = dt
-   print 'newtime, ' + str(h)
-   xs = []
-   ## WHILE ERROR IS ABOVE THRESHOLD
-   error = tol + .0001
+   
+   ## RESET ERROR
+   error = tol*1.01
    it2 = 0
+   xs = []
+   xn = []
    hvec = []
-   errvec = []
+   
    xnvec = []
    xsvec = []
-   while error > tol and it2 < 1000:
+   while error > tol and it2 < 10:
       it2 = it2 + 1
-      #print(2)
-      ##IOND
       # EVALUATE STAGES
       f = np.empty((0,1),float)
       for fn in feval:
          #print(4)
-         f = np.append(f,np.array([[fn(x,t)]]),axis=0)
+         f = np.append(f,fn(x,t))
       
-      
-      k = h*f
+      k = np.array([h*f]).T
       #print(str(k))
+      
       # LOOPS THROUGH ALL K VALUES DEPENDING ON ORDER OF FUNCTION
-      hvec = hvec + [h]
-      errvec = errvec + [error]
       for klev in range(1,order):
-         #print(3)
-         #print(str(klev))
          # CALCULATES F FOR ALL FUNCTIONS IN FEVAL
          f = np.empty((0,1),float)
-         # EVALUATES F DEPENDING ON LEVEL
+         # EVALUATES F DEPENDING ON LEVEL OF K
          for fn in feval:
-            #print(5)
-            cb = np.array([ck_b[klev,range(0,(klev))]]).T
+            cb = np.array([ck_b[klev,range(0,klev)]])
             ca = ck_a[klev]
-            ###
-            ### THE BROKEN THING IS HERE
-            ###
-            #print(str(cb))
-            #print(str(ca))
-            #print(k)
-            f = np.append(f,np.array([[fn(x+cb.T*k,t+ca)]]),axis = 0)
+            f = np.append(f,fn(x+cb*k,t+ca*h))
+         f = np.array([f]).T
          k = np.append(k,h*f,axis = 1)
-         print 'klev: ' + str(klev) + 'k: ' + str(k)
-         ##IOND
+         # End for klev
+         
       # CALCULATE x values
+      
       xnew = np.sum(x + ck_c.T*k,axis = 1)
       xnvec = np.append(xnvec,xnew)
       xs = np.sum(x + ck_cs.T*k,axis=1)
       xsvec = np.append(xsvec,xs)
+      
       # ESTIMATE ERROR
       error = np.amax(np.absolute(xnew-xs))
+      
+      # ADJUST H BASED ON ERROR
       hnew = h*(tol/error)**(0.2)
-      # IF ERROR IS STILL TOO HIGH, ADJUST DT
       h = hnew
       
+      #error = tol*.9
+      
+      #print('klev: ' + str(klev))
+      #print('k: ' + str(k))
+      #error = tol - 0.1
+      ### End while error > tol
    
+   #print("iter err: " + str(it2))
+   #errvec = errvec + [error]      
+   print('h: ' + str(h))
+  # print('error: ' + str(error))
+   #print('f: ' + str(f))
+   #print('xnew: ' + str(xnew))
+   #print('xs: ' + str(xs))
+   
+   # STORE VALUES FROM ADAPTIVE TIMESTEPPING
    x = np.reshape(xnew,(-1,1))
-   # STORE SOLUTION (we assume XS is better)
-   xsol = np.append(xsol,np.reshape(xs,(-1,1)),axis = 1)
-   
+   # STORE SOLUTION (we assume XNEW is better)
+   xsol = np.append(xsol,x,axis = 1)
+   #print('x = '+str(x))
+   #print('t = '+str(round(t,4)))
    # ADJUST TIME BY H
    t = t + h 
    tvec = tvec + [t]
    ts = ts + [h]
+   
+   # Set starting h for next timestep (max increase)
+   h = 1.2*h
+   
+   ### End while time < tfinal
+   
+   
 ######## Solver ends here
 ################################################
-#pt = range(1,len(tvec)-1)
-#tvec = [tvec[i] for i in pt]
-#xsol = [xsol[1,i] for i in pt]
-#plt.plot(tvec,xsol)
-#plt.show()
+
+
+
+pt = range(1,len(tvec)-1)
+tvec = [tvec[i] for i in pt]
+ts = [ts[i] for i in pt]
+xsol1 = [xsol[0,i] for i in pt]
+xsol2 = [xsol[1,i] for i in pt]
+#errvec = [errvec[i] for i in pt]
+plt.plot(tvec,xsol1)
+plt.plot(tvec,xsol2)
+plt.show() 
 
 
 #plt.plot(tvec,xsol[0,:])

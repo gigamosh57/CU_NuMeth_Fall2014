@@ -80,7 +80,7 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
          for i in range(0,len(xnew)): 
             if xnew[i] > errtol: relerror[i] = np.absolute((xnew[i] - xs[i])/xnew[i])
          
-         error = np.amax(np.amax(abserror),np.amax(relerror))
+         error = np.amax([np.amax(abserror),np.amax(relerror)])
          
          # ADJUST H BASED ON ERROR
          hnew = h*(tol/error)**(0.2)
@@ -227,7 +227,7 @@ while t < tfinal:# and it1 < 20:
       for i in range(0,len(xnew)): 
          if xnew[i] > errtol: relerror[i] = np.absolute((xnew[i] - xs[i])/xnew[i])
       
-      error = np.amax(np.amax(abserror),np.amax(relerror))
+      error = np.amax([np.amax(abserror),np.amax(relerror)])
       
       # ADJUST H BASED ON ERROR
       hnew = h*(tol/error)**(0.2)

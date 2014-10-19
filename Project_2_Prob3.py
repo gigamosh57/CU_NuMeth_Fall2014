@@ -76,7 +76,7 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
          
          # ESTIMATE ERROR
          abserror = np.absolute(xnew-xs)
-         relerror = np.zeros((2,1))
+         relerror = np.zeros((len(x0),1))
          for i in range(0,len(xnew)): 
             if xnew[i] > errtol: relerror[i] = np.absolute((xnew[i] - xs[i])/xnew[i])
          
@@ -84,7 +84,6 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
          
          # ADJUST H BASED ON ERROR
          hnew = h*(tol/error)**(0.2)
-         hvec = hvec + [hnew]
          if hnew > h*1.2: hnew=h*1.2
          h = hnew
          if error < tol: errloop = 1
@@ -135,7 +134,7 @@ errtol = 10**-20
 ######## test solver with function here:
 
 
-#tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,order = 3)
+tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,order = 3)
 
 ################################################
 ######## test solver without function here
@@ -182,7 +181,6 @@ while t < tfinal:# and it1 < 20:
    it2 = 0
    xs = []
    xn = []
-   hvec = []
    #h = dt
    
    xnvec = []
@@ -225,7 +223,7 @@ while t < tfinal:# and it1 < 20:
       
       # ESTIMATE ERROR
       abserror = np.absolute(xnew-xs)
-      relerror = np.zeros((2,1))
+      relerror = np.zeros((len(x0),1))
       for i in range(0,len(xnew)): 
          if xnew[i] > errtol: relerror[i] = np.absolute((xnew[i] - xs[i])/xnew[i])
       
@@ -233,7 +231,6 @@ while t < tfinal:# and it1 < 20:
       
       # ADJUST H BASED ON ERROR
       hnew = h*(tol/error)**(0.2)
-      hvec = hvec + [hnew]
       if hnew > h*1.2: hnew=h*1.2
       h = hnew
       if error < tol: errloop = 1
@@ -286,5 +283,5 @@ while t < tfinal:# and it1 < 20:
 
 
 plt.plot(tvec,xsol[0,:])
-plt.plot(tvec,xsol[1,:])
+plt.plot(tvec,xsol[2,:])
 plt.show() 

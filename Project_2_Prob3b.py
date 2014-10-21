@@ -10,8 +10,31 @@ import matplotlib.pyplot as plt
 
 ####################################################################
 ######## Runge-Kutta ODE solver with Cash-Karp 4th-5th order params
+def precip(t):
+      ## CALCULATE PRECIP
+   global p
+   if t >= 0 and t <= 1:
+      p = 1
+   elif t > 1 and t <= 2:
+      p = 5
+   elif t > 2 and t <= 3:
+      p = 5
+   elif t > 8 and t <= 9:
+      p = 3
+   elif t > 9 and t <= 10:
+      p = 10
+   elif t > 10 and t <= 11:
+      p = 12
+   elif t > 11 and t <= 12:
+      p = 6
+   elif t > 12 and t <= 13:
+      p = 1
+   else:
+      p = 0
+   return p
 
 def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
+   
    # INITIALIZE ARRAY OF CASH-KARP FACTORS
    ck_a = np.array([[0],[1/5.],[3/10.],[3/5.],[1.],[7/8.]])
    ck_b = np.array([[0,0,0,0,0],
@@ -33,6 +56,7 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
    #initialize x, initialize solution matrix xsol
    x0 = np.array([x0]).T
    x=x0
+   xnew = x
    xsol = np.empty((len(x0),0),float)
    xsol = np.append(xsol,x0,axis=1)
    ts = [0]
@@ -42,17 +66,27 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
    t = tstart
    h = dt
    errvec = []
+   global r
+   p = 0
+   rvec = [0]
+   prec = [p] 
    while t < tfinal:
+      if round(t,1) == round(t,2): print( "t: " + str(round(t,1)) + ", h: " + str(round(h,2)))
       
       ## RESET VALUES
       error = tol*1.01
       errloop = 0
       while errloop == 0:
+         p = precip(t)
+         if xnew[0] <= umax:
+            r = 0
+         else:
+            r = (xnew[0]-umax)/tc
+         
          # EVALUATE STAGES
          f = np.empty((0,1),float)
          for fn in feval:
             f = np.append(f,fn(x,t))
-         
          k = np.array([h*f]).T
          
          # LOOPS THROUGH ALL K VALUES DEPENDING ON ORDER OF FUNCTION
@@ -90,7 +124,8 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
          
          #print 'error: ' + str(error)
          ### End while errloop = 0
-      
+      prec = prec + [p]
+      rvec = rvec + [r]
       # UPDATE ALL VALUES FOR NEXT TIMESTEP
       h = hnew
       x = np.reshape(xnew,(-1,1))
@@ -100,7 +135,7 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
       ts = ts + [h]
       ### End while time < tfinal
       
-   return tvec,xsol,ts
+   return tvec,xsol,ts,prec,rvec
 
 ######## Solver ends here
 ################################################
@@ -123,13 +158,14 @@ import matplotlib.pyplot as plt
 
 # Problem params
 
+global umax
+global tc
 umax = 10 # mm
 lmax = 20 # mm
 ku = 0.3  # day^-1 
 kl = 0.05 # day^-1 
 kp = 0.1  # day^-1 
 tc = 0.5  # day
-
 # du/dl
 # dl/dl
 
@@ -137,21 +173,17 @@ tc = 0.5  # day
 #[0]   u
 #[1]   du/dt
 #[2]   l
-#[3]   du/dt
-#[4]   r
+#[3]   dl/dt
 
-x0 =  [1,
+x0 =  [9,
        0,
        12,
-       0,
-       0] 
+       0]
 
-feval = [lambda x,t: x[0,0],
-         lambda x,t: -ku*x[0,0] - kp*(x[2,0]-(x[2,0]/lmax)**3)*x[0,0]-x[4,0]-p,
-         lambda x,t: x[2,0],
-         lambda x,t: kp*(x[2,0] - (x[2,0]/lmax)**3)*x[0,0]-kl*x[2,0]
-         lambda x,t: 0 if x[0,0] < umax else (x[0,0]-umax)/tc
-         ]
+feval = [lambda x,t: x[1,0],
+         lambda x,t: -ku*x[0,0] - kp*(1-(x[2,0]/lmax)**3)*x[0,0]-r+p,
+         lambda x,t: x[3,0],
+         lambda x,t: kp*(1 - (x[2,0]/lmax)**3)*x[0,0]-kl*x[2,0]]
 
 ##### FROM HERE
 ### check if statements
@@ -159,12 +191,10 @@ feval = [lambda x,t: x[0,0],
 ### Add routine to calculate precip at each timestep
 ### plots
 
-
-
 # Model params
 tstart = 0
-tfinal = 100
-dt = (tfinal-tstart)/1000.
+tfinal = 5
+dt = (tfinal-tstart)/500.
 order = 3
 tol=10**-3
 errtol = 10**-20
@@ -177,9 +207,23 @@ errtol = 10**-20
 ######## test solver with function here:
 
 
-tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = 3)
-plt.plot(tvecf,xsolf[0,:])
-plt.plot(tvecf,xsolf[2,:])
+tvecf,xsolf,tsf,prec,rplot = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+axes.set_xlabel('time')
+axes.set_ylabel('mm')
+
+uplot = xsolf[0,:]
+lplot = xsolf[2,:]
+splot = uplot + lplot
+qplot = ku*uplot + kl*lplot + rplot
+axes.plot(tvecf,uplot,label = "u")
+axes.plot(tvecf,lplot,label = "l")
+axes.plot(tvecf,rplot,label = "r")
+axes.plot(tvecf,qplot,label = "q")
+axes.plot(tvecf,prec,label = "precip")
+
+axes.legend()
 plt.show() 
 
 ######## End test solver with function

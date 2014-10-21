@@ -148,9 +148,17 @@ errtol = 10**-20
 ######## test solver with function here:
 
 
-tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = 3)
-plt.plot(tvecf,xsolf[0,:])
-plt.plot(tvecf,xsolf[2,:])
+tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
+
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+axes.set_xlabel('t')
+axes.set_ylabel('x')
+qplot = ku*uplot + kl*lplot + rplot
+axes.plot(tvecf,xsolf[0,:],label = "(1), x0="+str(x0[0])+", k=" + str(k1))
+axes.plot(tvecf,xsolf[2,:],label = "(2), x0="+str(x0[1])+", k=" + str(k2))
+axes.legend()
+
 plt.show() 
 
 ######## End test solver with function

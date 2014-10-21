@@ -66,17 +66,19 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
          
          # ESTIMATE ERROR
          abserror = np.absolute(xnew-xs)
-         relerror = np.zeros((2,1))
+         relerror = np.zeros((len(x0),1))
          for i in range(0,len(xnew)): 
             if xnew[i] > errtol: relerror[i] = np.absolute((xnew[i] - xs[i])/xnew[i])
          
-         error = np.amax(np.amax(abserror),np.amax(relerror))
+         error = np.amin([np.amax(abserror),np.amax(relerror)])
          
          # ADJUST H BASED ON ERROR
          hnew = h*(tol/error)**(0.2)
          if hnew > h*1.2: hnew=h*1.2
          h = hnew
-         if error < tol: errloop = 1
+         if hnew >= h: errloop = 1
+         
+         #print 'error: ' + str(error)
          ### End while errloop = 0
       
       # UPDATE ALL VALUES FOR NEXT TIMESTEP
@@ -113,10 +115,10 @@ feval = [lambda x,t: a*x[0,0]-c*x[0,0]*x[1,0],
       lambda x,t: d*x[0,0]*x[1,0]-b*x[1,0]]
 x0 =  [100,10]
 tstart = 0
-tfinal = 25
+tfinal = 100
 dt = (tfinal-tstart)/1000.
-order = 3
-tol=10**-3
+order = 5
+tol=10**-5
 errtol = 10**-20
 
 ######## End function input here
@@ -124,12 +126,6 @@ errtol = 10**-20
 
 ################################################
 ######## test solver with function here:
-
-
-
-
-######## End solver function input here
-################################################
 
 tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,order = order)
 fig = plt.figure()

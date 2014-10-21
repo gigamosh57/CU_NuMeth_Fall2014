@@ -44,7 +44,7 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
    errvec = []
    while t < tfinal:
       
-      ## RESET VALUES
+      ## RESET VALUES AND LOOP UNTIL ERROR IS LOW
       error = tol*1.01
       errloop = 0
       while errloop == 0:
@@ -80,13 +80,13 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
          for i in range(0,len(xnew)): 
             if xnew[i] > errtol: relerror[i] = np.absolute((xnew[i] - xs[i])/xnew[i])
          
-         error = np.amax([np.amax(abserror)])#,np.amax(relerror)])
+         error = np.amin([np.amax(abserror),np.amax(relerror)])
          
          # ADJUST H BASED ON ERROR
          hnew = h*(tol/error)**(0.2)
          if hnew > h*1.2: hnew=h*1.2
          h = hnew
-         if error < tol: errloop = 1
+         if hnew >= h: errloop = 1
          
          #print 'error: ' + str(error)
          ### End while errloop = 0
@@ -99,7 +99,7 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
       tvec = tvec + [t]
       ts = ts + [h]
       ### End while time < tfinal
-      
+         
    return tvec,xsol,ts
 
 ######## Solver ends here
@@ -136,9 +136,9 @@ x0 =  [0,0,1,0]
 tstart = 0
 tfinal = 100
 dt = (tfinal-tstart)/1000.
-order = 3
-tol=10**-3
-errtol = 10**-20
+order = 4
+tol=10**-4
+errtol = 10**-10
 
 ######## End function input here
 ################################################
@@ -147,7 +147,9 @@ errtol = 10**-20
 ################################################
 ######## test solver with function here:
 
-
+tvecf = tvec
+xsolf = xsol
+tsf = ts
 tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
 
 fig = plt.figure()

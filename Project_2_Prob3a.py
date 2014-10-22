@@ -1,3 +1,8 @@
+#### Page Weil
+#### 10/21/14
+#### CVEN 5537
+#### PROJECT 2 , PROBLEM 3A
+
 ####################################################################
 ######## INITIALIZE PYTHON
 import numpy as np
@@ -106,25 +111,12 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
 ################################################
 
 
-
-####################################################################
-######## INITIALIZE PYTHON
-import numpy as np
-# For pi
-import math
-# for plotting
-import matplotlib.pyplot as plt
-######## 
-####################################################################
-
-
 ################################################
+######## PROBLEM 3A, (A)
 ######## Define inputs for the  spring mass problem
 
-
-
-k1 = 1
-k2 = 0.01
+k1 = 0.01
+k2 = 1
 m1 = 1
 m2 = 1
 
@@ -134,22 +126,18 @@ feval = [lambda x,t: x[1,0],
          lambda x,t: 1/m2*(k2*(x[0,0]-x[2,0]))]
 x0 =  [0,0,1,0] 
 tstart = 0
-tfinal = 100
+tfinal = 200
 dt = (tfinal-tstart)/1000.
 order = 4
 tol=10**-4
 errtol = 10**-10
 
-######## End function input here
+######## End input 
 ################################################
-
 
 ################################################
 ######## test solver with function here:
 
-tvecf = tvec
-xsolf = xsol
-tsf = ts
 tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
 
 fig = plt.figure()
@@ -157,8 +145,8 @@ axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
 axes.set_xlabel('t')
 axes.set_ylabel('x')
 qplot = ku*uplot + kl*lplot + rplot
-axes.plot(tvecf,xsolf[0,:],label = "(1), x0="+str(x0[0])+", k=" + str(k1))
-axes.plot(tvecf,xsolf[2,:],label = "(2), x0="+str(x0[1])+", k=" + str(k2))
+axes.plot(tvecf,xsolf[0,:]+1,label = "(1), x0="+str(x0[0])+", k=" + str(k1))
+axes.plot(tvecf,xsolf[2,:]+2,label = "(2), x0="+str(x0[2])+", k=" + str(k2))
 axes.legend()
 
 plt.show() 

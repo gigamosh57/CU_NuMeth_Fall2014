@@ -115,10 +115,10 @@ feval = [lambda x,t: a*x[0,0]-c*x[0,0]*x[1,0],
       lambda x,t: d*x[0,0]*x[1,0]-b*x[1,0]]
 x0 =  [100,10]
 tstart = 0
-tfinal = 100
+tfinal = 50
 dt = (tfinal-tstart)/1000.
 order = 5
-tol=10**-5
+tol=10**-4
 errtol = 10**-20
 
 ######## End function input here
@@ -127,7 +127,7 @@ errtol = 10**-20
 ################################################
 ######## test solver with function here:
 
-tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,order = order)
+tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
 fig = plt.figure()
 axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
 axes.set_xlabel('t')
@@ -137,8 +137,34 @@ pred = xsolf[0,:]
 prey = xsolf[1,:]
 axes.plot(tvecf,pred,label = "pred")
 axes.plot(tvecf,prey,label = "prey")
-axes.plot(tvecf,tsf,label = "ts")
 
 plt.show() 
 
+######## End test here
+################################################
 
+################################################
+######## Show timestep size
+
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+axes.set_xlabel('t')
+axes.set_ylabel('timestep width')
+
+axes.plot(tvecf,tsf,label = "ts")
+
+plt.show()
+
+######## End timestep size
+################################################
+
+################################################
+######## Comments
+
+#2a - The above code shows the ODE solver and inputs part 2a
+
+#2b - The attached pictures show the pred-prey solution and the 
+#      timestep width.  It appears that there is a smaller timestep width whenver 
+#      the rates of change for each of the values is highest.  This makes sense
+#      since it means that there is more variation for the same time distance 
+#      so the timesteps have to be smaller to capture that variation

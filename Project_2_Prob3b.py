@@ -149,7 +149,7 @@ def precip(t):
 ####################################################################
 
 ################################################
-######## Define inputs for the hydrologic model problem
+######## Define inputs for the hydrologic model problem (first set of params)
 
 # Problem params
 global umax
@@ -176,7 +176,7 @@ tstart = 0
 tfinal = 20
 dt = (tfinal-tstart)/1000.
 order = 4
-tol=10**-
+tol=10**-4
 errtol = 10**-20
 
 ######## End function input here
@@ -219,3 +219,70 @@ plt.show()
 # Runoff occurs when the upper zone is full, even if the lower zone is not.  This is because
 # the lower zone cannot transmit water through interflow or percolation quickly enough
 # to outpace the precip
+######## End discussion
+################################################
+
+################################################
+######## Define inputs for the hydrologic model problem (second set of params)
+
+# Problem params
+global umax
+umax = 10 # mm
+lmax = 20 # mm
+ku = 0.3  # day^-1 
+kl = 0.05 # day^-1 
+kp = 0.1 # day^-1 
+global tc
+tc = 0.5  # a
+
+# Setup as:
+#[0]   du/dt
+#[1]   dl/dt
+
+x0 =  [9,
+       12]
+
+feval = [lambda x,t: -ku*x[0,0] - kp*(1-(x[1,0]/lmax)**3)*x[0,0] - r + p,
+         lambda x,t: kp*(1 - (x[1,0]/lmax)**3)*x[0,0]-kl*x[1,0]]
+
+# Model params
+tstart = 0
+tfinal = 20
+dt = (tfinal-tstart)/1000.
+order = 4
+tol=10**-4
+errtol = 10**-20
+
+######## End function input here
+################################################
+
+################################################
+######## test solver with function here:
+
+tvecf,xsolf,tsf,prec,rplot = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+axes.set_xlabel('time')
+axes.set_ylabel('mm')
+
+uplot = xsolf[0,:]
+lplot = xsolf[1,:]
+splot = uplot + lplot
+qplot = ku*uplot + kl*lplot + rplot
+
+axes.plot(tvecf,uplot,label = "u")
+axes.plot(tvecf,lplot,label = "l")
+axes.plot(tvecf,rplot,label = "r")
+axes.plot(tvecf,qplot,label = "q")
+axes.plot(tvecf,prec,label = "precip")
+
+axes.legend()
+plt.show() 
+
+######## End test solver with function
+################################################
+
+################################################
+######## Discussion
+# The same as the previous problem.  The runof is higher in this problem
+# since the upper zone starts more full and cannot empty before the second rain event hits

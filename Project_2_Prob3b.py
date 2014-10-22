@@ -1,3 +1,7 @@
+#### Page Weil
+#### 10/21/14
+#### CVEN 5537
+#### PROJECT 2 , PROBLEM 3B
 ####################################################################
 ######## INITIALIZE PYTHON
 import numpy as np
@@ -9,29 +13,7 @@ import matplotlib.pyplot as plt
 ####################################################################
 
 ####################################################################
-######## Runge-Kutta ODE solver with Cash-Karp 4th-5th order params
-def precip(t):
-      ## CALCULATE PRECIP
-   global p
-   if t >= 0 and t <= 1:
-      p = 1
-   elif t > 1 and t <= 2:
-      p = 5
-   elif t > 2 and t <= 3:
-      p = 5
-   elif t > 8 and t <= 9:
-      p = 3
-   elif t > 9 and t <= 10:
-      p = 10
-   elif t > 10 and t <= 11:
-      p = 12
-   elif t > 11 and t <= 12:
-      p = 6
-   elif t > 12 and t <= 13:
-      p = 1
-   else:
-      p = 0
-   return p
+######## Runge-Kutta ODE solver with Cash-Karp 4th-5th order params   
 
 def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
       # INITIALIZE ARRAY OF CASH-KARP FACTORS
@@ -139,53 +121,55 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-20):
 ######## Solver ends here
 ################################################
 
-
-
 ####################################################################
-######## INITIALIZE PYTHON
-import numpy as np
-# For pi
-import math
-# for plotting
-import matplotlib.pyplot as plt
-######## 
+######## Precip function
+def precip(t):
+      ## CALCULATE PRECIP
+   global p
+   if t >= 0 and t <= 1:
+      p = 1
+   elif t > 1 and t <= 2:
+      p = 5
+   elif t > 2 and t <= 3:
+      p = 5
+   elif t > 8 and t <= 9:
+      p = 3
+   elif t > 9 and t <= 10:
+      p = 10
+   elif t > 10 and t <= 11:
+      p = 12
+   elif t > 11 and t <= 12:
+      p = 6
+   elif t > 12 and t <= 13:
+      p = 1
+   else:
+      p = 0
+   return p
+######## end precip   
 ####################################################################
-
 
 ################################################
 ######## Define inputs for the hydrologic model problem
 
 # Problem params
 global umax
-global tc
 umax = 10 # mm
 lmax = 20 # mm
 ku = 0.3  # day^-1 
 kl = 0.05 # day^-1 
 kp = 0.1 # day^-1 
+global tc
 tc = 0.5  # a
-# du/dl
-# dl/dl
 
 # Setup as:
-#[0]   u
-#[1]   du/dt
-#[2]   l
-#[3]   dl/dt
+#[0]   du/dt
+#[1]   dl/dt
 
 x0 =  [1,
        12]
-#x0 =  [9,
-#       12]
-       
+
 feval = [lambda x,t: -ku*x[0,0] - kp*(1-(x[1,0]/lmax)**3)*x[0,0] - r + p,
          lambda x,t: kp*(1 - (x[1,0]/lmax)**3)*x[0,0]-kl*x[1,0]]
-
-##### FROM HERE
-### check if statements
-### Setup p as a global variable
-### Add routine to calculate precip at each timestep
-### plots
 
 # Model params
 tstart = 0
@@ -198,10 +182,8 @@ errtol = 10**-20
 ######## End function input here
 ################################################
 
-
 ################################################
 ######## test solver with function here:
-
 
 tvecf,xsolf,tsf,prec,rplot = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
 fig = plt.figure()
@@ -226,3 +208,14 @@ plt.show()
 ######## End test solver with function
 ################################################
 
+################################################
+######## Discussion
+# The equation is not set up to limit the maximum value of u to less than umax
+# As soon as u passes umax, the runoff kicks in and u begins to drop.
+# This hydrograph shows an immediate response to precipitation by the upper zone
+# u (blue line is u volume) and a very muted response by the lower zone (green line is l volume).
+# 
+# both upper and lower zones fill quickly and release water slowly.
+# Runoff occurs when the upper zone is full, even if the lower zone is not.  This is because
+# the lower zone cannot transmit water through interflow or percolation quickly enough
+# to outpace the precip

@@ -1,3 +1,8 @@
+#### Page Weil
+#### 10/21/14
+#### CVEN 5537
+#### PROJECT 2 , PROBLEM 3C
+
 ####################################################################
 ######## INITIALIZE PYTHON
 import numpy as np
@@ -30,44 +35,6 @@ def proot(f,bounds,n = 1000,tol = 0.001):
 ######## 
 ####################################################################
 
-################################################
-######## Define inputs for the hydrologic model problem
-
-# Problem params
-
-global Atank
-Atank = 0.3  # m2
-global D
-D =     0.01 # m
-global nu
-nu = 10**-6  # m2/s
-global L
-L =   2    # m
-global grav
-grav =  9.81 # m/s2
-global krel
-krel = 0.01
-global vtol
-vtol = 10**-4
-global Q
-Q = 0
-global Re
-# Setup as:
-#[1]   dH/dt
-
-x0 =  [3] 
-feval = [lambda x,t: -Q/Atank]
-
-# Model params
-tstart = 0
-tfinal = 1800
-dt = (tfinal-tstart)/1000.
-order = 4
-tol=10**-3
-errtol = 10**-10
-
-######## End function input here
-################################################
 
 ####################################################################
 ######## Runge-Kutta ODE solver with Cash-Karp 4th-5th order params
@@ -203,10 +170,47 @@ def pagerkck4(feval,x0,tstart,tfinal,dt,order = 4,tol=10**-2,errtol = 10**-10):
 ######## Solver ends here
 ################################################
 
+################################################
+######## Define inputs for the model problem
+
+# Problem params
+
+global Atank
+Atank = 0.3  # m2
+global D
+D =     0.01 # m
+global nu
+nu = 10**-6  # m2/s
+global L
+L =   2    # m
+global grav
+grav =  9.81 # m/s2
+global krel
+krel = 0.01
+global vtol
+vtol = 10**-4
+global Q
+Q = 0
+global Re
+# Setup as:
+#[1]   dH/dt
+
+x0 =  [3] 
+feval = [lambda x,t: -Q/Atank]
+
+# Model params
+tstart = 0
+tfinal = 1800
+dt = (tfinal-tstart)/1000.
+order = 4
+tol=10**-3
+errtol = 10**-10
+
+######## End function input here
+################################################
 
 ################################################
 ######## test solver with function here:
-
 
 tvec,xsol,ts,fricvec = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
 fig = plt.figure()
@@ -220,4 +224,14 @@ axes.legend()
 plt.show() 
 
 ######## End test solver with function
+################################################
+
+################################################
+######## Problem 3c discussion
+# It is difficult to see in only 1800 seconds, but the line in figure 1 reduces in slope
+# slightly as time goes on.  Figure 2 shows the function extended to 6000 seconds and 
+# that the slope drops off as time goes on.
+#
+#
+######## 
 ################################################

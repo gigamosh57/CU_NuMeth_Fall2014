@@ -138,13 +138,12 @@ errtol = 10**-10
 ################################################
 ######## test solver with function here:
 
-tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order)
+tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order,errtol = errtol)
 
 fig = plt.figure()
 axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
 axes.set_xlabel('t')
 axes.set_ylabel('x')
-qplot = ku*uplot + kl*lplot + rplot
 axes.plot(tvecf,xsolf[0,:]+1,label = "(1), x0="+str(x0[0])+", k=" + str(k1))
 axes.plot(tvecf,xsolf[2,:]+2,label = "(2), x0="+str(x0[2])+", k=" + str(k2))
 axes.legend()
@@ -152,4 +151,117 @@ axes.legend()
 plt.show() 
 
 ######## End test solver with function
+################################################
+
+################################################
+######## (a) Discussion:
+#  Since spring 2 (rightmost) is very stong, it intiates a high frequency 
+#  oscillation between the two masses.  Since they are equal mass, they move nearly equidistant
+#  from one another.  Since spring 1 is very weak, after mass 1 is pulled to the right by spring 2
+#  center of mass of weights 1 and 2 move slowly back towards 0 and oscillate according to spring 1
+#  
+######## End (a) Discussion:
+################################################
+
+################################################
+######## PROBLEM 3A, (B)
+######## Define inputs for the  spring mass problem
+
+k1 = 0.01
+k2 = 1
+m1 = 1
+m2 = 1
+
+feval = [lambda x,t: x[1,0],
+         lambda x,t: -1/m1*(k1*x[0,0]+k2*(x[0,0]-x[2,0])),
+         lambda x,t: x[3,0],
+         lambda x,t: 1/m2*(k2*(x[0,0]-x[2,0]))]
+x0 =  [1,0,1,0] 
+tstart = 0
+tfinal = 50
+dt = (tfinal-tstart)/1000.
+order = 4
+tol=10**-4
+errtol = 10**-10
+
+######## End input 
+################################################
+
+################################################
+######## test solver with function here:
+
+tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order,errtol = errtol)
+
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+axes.set_xlabel('t')
+axes.set_ylabel('x')
+axes.plot(tvecf,xsolf[0,:]+1,label = "m1")
+axes.plot(tvecf,xsolf[2,:]+2,label = "m2")
+axes.legend()
+
+plt.show() 
+
+######## End test solver with function
+################################################
+
+################################################
+######## (b) Discussion:
+#  Spring 1 begins compressed.  Since spring 2 has a very high k, when the weaker
+#  spring 1 pushes on mass 1, it has a nearly negligible effect on compressing spring 2.
+#  so the masses move together.  The distance between them does not change much
+#  
+######## End (b) Discussion:
+################################################
+
+################################################
+######## PROBLEM 3A, (B)
+######## Define inputs for the  spring mass problem
+
+k1 = 1
+k2 = 0.01
+m1 = 1
+m2 = 1
+
+feval = [lambda x,t: x[1,0],
+         lambda x,t: -1/m1*(k1*x[0,0]+k2*(x[0,0]-x[2,0])),
+         lambda x,t: x[3,0],
+         lambda x,t: 1/m2*(k2*(x[0,0]-x[2,0]))]
+x0 =  [0,0,1,0] 
+tstart = 0
+tfinal = 100
+dt = (tfinal-tstart)/1000.
+order = 4
+tol=10**-4
+errtol = 10**-15
+
+######## End input 
+################################################
+
+################################################
+######## test solver with function here:
+
+tvecf,xsolf,tsf = pagerkck4(feval,x0,tstart,tfinal,dt,tol = tol,order = order,errtol = errtol)
+
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+axes.set_xlabel('t')
+axes.set_ylabel('x')
+axes.plot(tvecf,xsolf[0,:]+1,label = "m1")
+axes.plot(tvecf,xsolf[2,:]+2,label = "m2")
+axes.legend()
+
+plt.show() 
+
+######## End test solver with function
+################################################
+
+################################################
+######## (c) Discussion:
+#  Spring 2 is now weaker.  Spring 2 begins extended and is slowly drawn back towards
+#  spring 1.  Since spring 1 is so much stronger, the force translated through by mass 2 through
+#  mass 1 to spring 1 only causes spring 1 to compress a very small amount.  Spring 1 is so strong, 
+#  it is almost like spring 2 is just connected directly to the wall.
+#  
+######## End (c) Discussion:
 ################################################

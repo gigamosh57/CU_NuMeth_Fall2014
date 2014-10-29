@@ -10,8 +10,8 @@ import math
 import matplotlib.pylab as plt
 
 am = lambda m: -4*np.cos(np.pi*m)/(np.pi*(2*m+1))
-alpha = lambda x, m: ((2*m+1)*np.pi/(2*L))*x
-usum = lambda x, m, t: am(m)*np.cos(alpha(x,m))*np.exp(-1*(alpha(x,m)**2)*b*t)
+alpha = lambda m: ((2*m+1)*np.pi/(2*L))
+vsum = lambda x, m, t: am(m)*np.cos(alpha(m)*x)*np.exp(-1*(alpha(m)**2)*b*t)
 uss = lambda x: 1
 ## Initialize default values
 L = 1
@@ -19,7 +19,7 @@ b = 1
 mmax = 50
 
 ## Initialize arrays
-t = [0.1,0.2,0.3,0.5,1,2,5,10,100]
+t = [0.01,0.05,0.2,0.3,0.5,1,2]
 m = np.arange(0,mmax+1)
 dx = 0.02
 xeval = list(np.arange(0,L+dx,dx))
@@ -30,10 +30,10 @@ for tm in t:
  tx = t.index(tm)
  for xm in xeval:
   xx = xeval.index(xm)
-  unow = 0
+  vnow = 0
   for mm in m:
-   unow = unow + usum(xm,mm,tm)
-  u_values[tx,xx] = unow + uss(xm)
+   vnow = vnow + vsum(xm,mm,tm)
+  u_values[tx,xx] = vnow + uss(xm)
 
 ## Loop through and plot
 colors = ()

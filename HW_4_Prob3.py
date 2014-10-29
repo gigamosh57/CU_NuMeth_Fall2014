@@ -9,8 +9,9 @@ import math
 # for plotting
 import matplotlib.pylab as plt
 
-
-usum = lambda x, m, t: (-4/(m*np.pi))*np.sin(m*np.pi*x/L)*np.exp(-1*m**2*np.pi**2*b*t/L**2)
+am = lambda m: (4*m/(np.pi*(2*L*m+L-2*m**2)))*(np.sin(1/2*np.pi*L*(1/m+2))-np.sin(np.pi*m))
+alpha = lambda x, m: ((2*m+1)*np.pi/(2*m)-m*np.pi/L)*x+m*np.pi
+usum = lambda x, m, t: am(m)*np.cos(alpha(x))*np.exp(-1*(alpha(x,m)**2)*np.pi**2*b*t/L**2)
 uss = lambda x: 3-2*x/L
 ## Initialize default values
 L = 1
@@ -46,7 +47,7 @@ for p in np.arange(0,len(u_values[:,1])):
  axes.plot(xeval,u_values[p,:],color = colors[p],label = "t: " + str(t[p]))
 
 axes.legend()
-plt.ylim((0,3))
+plt.ylim((0,1))
 
 plt.show()
 #### First find the appropriate am values for this solution

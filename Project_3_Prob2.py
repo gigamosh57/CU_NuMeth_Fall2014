@@ -53,7 +53,7 @@ b = 1
 c1 = 1 # T at x = 0
 c2 = 0 # dT/dx at x = 0
 c3 = 0 # T at x = L
-c4 = 0 # dT/dx at x = L
+c4 = 1 # dT/dx at x = L
 
 # Grid definition
 deltax = 0.01
@@ -66,6 +66,10 @@ a = np.arange(0,nx)
 b = np.arange(0,nx)
 c = np.arange(0,nx)
 r = np.arange(0,nx)
+
+# IC definition
+x = np.arange(0,nx)
+x[0] = 1
 
 for t in np.arange(0,tmax,deltat):
    # for each TS, determine a, b, c and r

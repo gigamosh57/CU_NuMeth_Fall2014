@@ -94,27 +94,28 @@ c4 = 1.0 # dT/dx at x = L
 # IC definition
 x = np.arange(0,nx)*0.0
 
+# Determine a, b, c and r at the outset
+#a
+a[0] = 0
+a[1:(nx-1)] = -mu
+a[nx-1] = -c4/deltax
+
+# b
+b[0] = c1 - c2/deltax
+b[1:(nx-1)] = 1+2*mu
+b[nx-1] = c3 + c4/deltax
+
+# c
+c[0] = c2/deltax
+c[1:(nx-1)] = -mu
+c[nx-1] = 0
+
+J = len(b)
+
 for t in tplot:
   # Changing boundary conditions from problem definition
   x[0] = h0*np.sin(2*np.pi*t/t0)
   
-  # Determine a, b, c and r at the outset
-  #a
-  a[0] = 0
-  a[1:(nx-1)] = -mu
-  a[nx-1] = -c4/deltax
-  
-  # b
-  b[0] = c1 - c2/deltax
-  b[1:(nx-1)] = 1+2*mu
-  b[nx-1] = c3 + c4/deltax
-  
-  # c
-  c[0] = c2/deltax
-  c[1:(nx-1)] = -mu
-  c[nx-1] = 0
-  
-  J = len(b)
   
   # r
   r[0] = c1*x[0] + c2*(x[1]-x[0])/deltax

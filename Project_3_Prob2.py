@@ -19,11 +19,6 @@ def thomas(a,b,c,r):
    y = b*0
    J = len(b)
    
-   # r
-   r[0] = c1*x[0] + c2*(x[1]-x[0])/deltax
-   r[1:(nx-1)] = x[1:(nx-1)]
-   r[nx-1] = c3*x[0] + c4*(x[J-1]-x[J-2])/deltax
-   
    # define efg matrix
    f[0] = b[0]
    g[0] = c[0]/f[0]
@@ -88,24 +83,30 @@ f2 = 1.0 #
 x = np.arange(0,nx)*0.0
 x[0] = 1
 
+# for each TS, determine a, b, c and r
+#a
+a[0] = 0
+a[1:(nx-1)] = -mu/2
+a[nx-1] = -c4/deltax
+
+# b
+b[0] = c1 - c2/deltax
+b[1:(nx-1)] = 1+mu
+b[nx-1] = c3 + c4/deltax
+   
+# c
+c[0] = c2/deltax
+c[1:(nx-1)] = -mu/2
+c[nx-1] = 0
+
+J = len(b)
 
 for t in np.arange(0,tmax,deltat):
    
-   # for each TS, determine a, b, c and r
-   #a
-   a[0] = 0
-   a[1:(nx-1)] = -mu
-   a[nx-1] = -c4/deltax
-   
-   # b
-   b[0] = c1 - c2/deltax
-   b[1:(nx-1)] = 1+2*mu
-   b[nx-1] = c3 + c4/deltax
-      
-   # c
-   c[0] = c2/deltax
-   c[1:(nx-1)] = -mu
-   c[nx-1] = 0
+   # r
+   r[0] = c1*x[0] + c2*(x[1]-x[0])/deltax
+   r[1:(nx-1)] = (mu/2)*x[0:(nx-2)] + (1-mu)*x[1:(nx-1)] + (mu/2)*x[2:nx]
+   r[nx-1] = c3*x[0] + c4*(x[J-1]-x[J-2])/deltax
    
    ####### THOMAS ALGORITHM HERE
    # plug into Thomas

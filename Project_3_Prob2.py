@@ -59,9 +59,9 @@ L = 1.0
 b = 1.0
 
 # Grid definition
-deltax = 0.01
+#deltax = 0.01
 nx = int(L/deltax+1)
-deltat = 0.5*np.sqrt(deltax)
+deltat = 0.5*deltax**2
 tmax = 0.5
 mu = b*deltat/deltax**2
 
@@ -76,14 +76,13 @@ c1 = 1.0 # T at x = 0
 c2 = 0.0 # dT/dx at x = 0
 c3 = 0.0 # T at x = L
 c4 = 1.0 # dT/dx at x = L
-f1 = 1.0 # 
-f2 = 1.0 #
 
 # IC definition
 x = np.arange(0,nx)*0.0
 x[0] = 1
 
 # for each TS, determine a, b, c and r
+
 #a
 a[0] = 0
 a[1:(nx-1)] = -mu/2
@@ -93,20 +92,19 @@ a[nx-1] = -c4/deltax
 b[0] = c1 - c2/deltax
 b[1:(nx-1)] = 1+mu
 b[nx-1] = c3 + c4/deltax
-   
+ 
 # c
 c[0] = c2/deltax
 c[1:(nx-1)] = -mu/2
 c[nx-1] = 0
-
-J = len(b)
-
 for t in np.arange(0,tmax,deltat):
    
+   # for each TS, determine a, b, c and r
+   
    # r
-   r[0] = c1*x[0] + c2*(x[1]-x[0])/deltax
+   r[0] = c1*x[0] + c2*(x[1]-x[0])/(deltax)
    r[1:(nx-1)] = (mu/2)*x[0:(nx-2)] + (1-mu)*x[1:(nx-1)] + (mu/2)*x[2:nx]
-   r[nx-1] = c3*x[0] + c4*(x[J-1]-x[J-2])/deltax
+   r[nx-1] = c3*x[0] + c4*(x[J-1]-x[J-2])/(deltax)
    
    ####### THOMAS ALGORITHM HERE
    # plug into Thomas
@@ -114,6 +112,7 @@ for t in np.arange(0,tmax,deltat):
 
 xplot = np.arange(0,L+deltax,deltax)
 axes.plot(xplot,x,color = [rand.random(),rand.random(),rand.random()],label = "dt: " + str(deltat))
+case1 = x[nx/2]
 
 ######## End Problem Part a
 ################################################
@@ -126,10 +125,10 @@ L = 1.0
 b = 1.0
 
 # Grid definition
-deltax = 0.01
+#deltax = 0.01
 nx = int(L/deltax+1)
-deltat = 5*np.sqrt(deltax)
-tmax = 0.5
+deltat = 5*deltax**2
+#tmax = 0.5
 mu = b*deltat/deltax**2
 
 # Initialize variables
@@ -150,24 +149,28 @@ f2 = 1.0 #
 x = np.arange(0,nx)*0.0
 x[0] = 1
 
+#a
+a[0] = 0
+a[1:(nx-1)] = -mu/2
+a[nx-1] = -c4/deltax
 
+# b
+b[0] = c1 - c2/deltax
+b[1:(nx-1)] = 1+mu
+b[nx-1] = c3 + c4/deltax
+ 
+# c
+c[0] = c2/deltax
+c[1:(nx-1)] = -mu/2
+c[nx-1] = 0
 for t in np.arange(0,tmax,deltat):
    
    # for each TS, determine a, b, c and r
-   #a
-   a[0] = 0
-   a[1:(nx-1)] = -mu
-   a[nx-1] = -c4/deltax
    
-   # b
-   b[0] = c1 - c2/deltax
-   b[1:(nx-1)] = 1+2*mu
-   b[nx-1] = c3 + c4/deltax
-   
-   # c
-   c[0] = c2/deltax
-   c[1:(nx-1)] = -mu
-   c[nx-1] = 0
+   # r
+   r[0] = c1*x[0] + c2*(x[1]-x[0])/(deltax)
+   r[1:(nx-1)] = (mu/2)*x[0:(nx-2)] + (1-mu)*x[1:(nx-1)] + (mu/2)*x[2:nx]
+   r[nx-1] = c3*x[0] + c4*(x[J-1]-x[J-2])/(deltax)
    
    ####### THOMAS ALGORITHM HERE
    # plug into Thomas
@@ -175,7 +178,7 @@ for t in np.arange(0,tmax,deltat):
 
 xplot = np.arange(0,L+deltax,deltax)
 axes.plot(xplot,x,color = [rand.random(),rand.random(),rand.random()],label = "dt: " + str(deltat))
-
+case2 = x[nx/2]
 ######## End Problem Part b
 ################################################
 
@@ -187,10 +190,10 @@ L = 1.0
 b = 1.0
 
 # Grid definition
-deltax = 0.01
+#deltax = 0.01
 nx = int(L/deltax+1)
-deltat = 50*np.sqrt(deltax)
-tmax = 0.5
+deltat = 50*deltax**2
+#tmax = 0.5
 mu = b*deltat/deltax**2
 
 # Initialize variables
@@ -204,31 +207,33 @@ c1 = 1.0 # T at x = 0
 c2 = 0.0 # dT/dx at x = 0
 c3 = 0.0 # T at x = L
 c4 = 1.0 # dT/dx at x = L
-f1 = 1.0 # 
-f2 = 1.0 #
 
 # IC definition
 x = np.arange(0,nx)*0.0
 x[0] = 1
 
+#a
+a[0] = 0
+a[1:(nx-1)] = -mu/2
+a[nx-1] = -c4/deltax
 
+# b
+b[0] = c1 - c2/deltax
+b[1:(nx-1)] = 1+mu
+b[nx-1] = c3 + c4/deltax
+ 
+# c
+c[0] = c2/deltax
+c[1:(nx-1)] = -mu/2
+c[nx-1] = 0
 for t in np.arange(0,tmax,deltat):
    
    # for each TS, determine a, b, c and r
-   #a
-   a[0] = 0
-   a[1:(nx-1)] = -mu
-   a[nx-1] = -c4/deltax
    
-   # b
-   b[0] = c1 - c2/deltax
-   b[1:(nx-1)] = 1+2*mu
-   b[nx-1] = c3 + c4/deltax
-    
-   # c
-   c[0] = c2/deltax
-   c[1:(nx-1)] = -mu
-   c[nx-1] = 0
+   # r
+   r[0] = c1*x[0] + c2*(x[1]-x[0])/(deltax)
+   r[1:(nx-1)] = (mu/2)*x[0:(nx-2)] + (1-mu)*x[1:(nx-1)] + (mu/2)*x[2:nx]
+   r[nx-1] = c3*x[0] + c4*(x[J-1]-x[J-2])/(deltax)
    
    ####### THOMAS ALGORITHM HERE
    # plug into Thomas
@@ -236,7 +241,7 @@ for t in np.arange(0,tmax,deltat):
 
 xplot = np.arange(0,L+deltax,deltax)
 axes.plot(xplot,x,color = [rand.random(),rand.random(),rand.random()],label = "dt: " + str(deltat))
-
+case3 = x[nx/2]
 ######## End Problem Part c
 ################################################
 
@@ -259,10 +264,10 @@ nmax = 100
 theta0 = 1
 
 ## Initialize arrays
-t = [0.01,0.5]
+t = [0.01,tmax]
 
 n = np.arange(0,nmax+1)
-dx = 0.05
+dx = deltax
 xeval = list(np.arange(0,L+dx,dx))
 thetas = np.zeros((len(t),len(xeval)))
 
@@ -273,9 +278,15 @@ for tn in t:
       xx = xeval.index(xn)
       thetas[tx,xx] = theta0*(1-4*np.sum(thetasum(xn,n,tn)))
 
-axes.plot(xeval,thetas[1,:],color = [rand.random(),rand.random(),rand.random()],label = "ana")
+axes.plot(xeval,thetas[1,:],color = [rand.random(),rand.random(),rand.random()],label = "ana, t:"+str(t[1]))
+analytical = thetas[1,int(nmax/2)]
 
 axes.legend()
 plt.show()
 
+print("For x=0.5, t=0.5; Case 1, x="+
+   str(round(case1,8))+" Case 2, x="+
+   str(round(case2,8))+" Case 3, x="+
+   str(round(case3,8))+" Analytical, x="+
+   str(round(analytical,8)))
 

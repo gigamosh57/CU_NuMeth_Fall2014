@@ -1,7 +1,7 @@
 ### Page Weil
 ### CVEN 5537
 ### 11/14/14
-### Project 4, Problem 1
+### Project 4, Problem 1a - Jacobi
 
 import numpy as np
 import matplotlib.pyplot as plt

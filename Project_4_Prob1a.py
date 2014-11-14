@@ -11,24 +11,27 @@ from datetime import datetime
 ###### Begin define problem variables
 
 tol = 10**-6
+maxiter = 500000
 
 # Grid size
 NX = 101
 NY = 101
+
 xmax = 1.
 ymax = 1.
 x = np.arange(0,xmax+xmax/(NX-1),xmax/(NX-1))
 y = np.arange(0,ymax+ymax/(NY-1),ymax/(NY-1))
 
 # initialize matrices
-u = np.empty((NX,NY))
-unew = u
+u = np.empty((NX,NY))*0.
+unew = np.empty((NX,NY))*0.
+delta = np.empty((NX,NY))*0.
 
 # Boundary conditions
 u[0,:]=x
 u[NY-1,:]=x
-u[:,0]=0
-u[:,NX-1]=1
+u[:,0]=0.
+u[:,NX-1]=1.
 
 ###### End define problem variables
 ###################################
@@ -36,19 +39,26 @@ u[:,NX-1]=1
 ###################################
 ###### Begin Jacobi solver
 
-
-
 # while toleranceerror > tol
 err = tol+1
+it=0
 while err > tol:
+  it = it + 1
+  #print(str(iter))
   # Loop through interior nodes
   for i in range(1,NX-1):
     for j in range(1,NY-1):
-      delta = 1/4*(u[i-1,j]+u[i,j-1]+u[i,j+1]+u[i+1,j]-4*u[i,j])
-      unew = u[i,j]+delta
+      delta[i,j] = 1/4.*(u[i-1,j]+u[i,j-1]+u[i,j+1]+u[i+1,j]-4.*u[i,j])
+#      unew[i,j] = u[i,j]+delta[i,j]
+  unew =  u+delta
+  u = unew
   # calculate error
   err = np.max(delta)
+  if it > maxiter: 
+    err = tol
+    print("Hit ",str(maxiter)," iter")
 
+print("Jacobi took ",str(it)," iterations")
 # Set special conditions (Type II BCs?)
 # Set values for exterior nodes
 
@@ -71,10 +81,7 @@ X, Y = np.meshgrid(x, y)
 # this is usually not such a good idea, because they don't
 # occur on nice boundaries, but we do it here for purposes
 # of illustration.
-CS = plt.contourf(X, Y, u, 10, # [-1, -0.1, 0, 0.1],
-                        #alpha=0.5,
-                        cmap=plt.cm.bone)#,
-                        #origin=origin)
+CS = plt.contourf(X, Y, u, 10, cmap=plt.cm.bone)
 
 plt.title('Test')
 plt.xlabel('x')

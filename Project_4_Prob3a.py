@@ -10,18 +10,25 @@ from datetime import datetime
 ###################################
 ###### Begin define problem variables
 
+NX = 21
+NY = 21
 tol = 10**-6
 maxiter = 5000
 w = 1/4.
+u0 = 0
+u1 = 1
+jbot = int(NX*2/4)
+plen = NY-jbot+1
 
 # Grid size
-NX = 21
-NY = 21
 
 xmax = 1.
 ymax = 1.
 x = np.arange(0,xmax+xmax/(NX-1),xmax/(NX-1))
 y = np.arange(0,ymax+ymax/(NY-1),ymax/(NY-1))
+
+k=2.975
+w = 0.5*(1-k/NX)
 
 # initialize matrices
 u = np.zeros((NX,NY))
@@ -34,9 +41,41 @@ u[NY-1,:]=0.
 u[:,0]=0.
 u[:,NX-1]=0.
 
-# set of points with type 2 BCs
-# set of points with type 1 BCs
-# corner points
+# generate set of coordinates for type 1 BCs
+t1 = np.hstack((np.zeros((NX,1)),np.zeros((NX,1))))
+t1[:,1] = np.arange(1,NX-1)
+t1[:,0] = 1
+
+# generate set of coordinates for type 2 BCs
+t2len = NX+NY*2-3+plen*2
+t2 = np.hstack((np.zeros((t2len,1)),np.zeros((t2len,1))))
+# left wall
+idx = np.arange(0,NY-1)
+t2[idx,0] = np.arange(1,NY)
+t2[idx,1] = 1
+# right wall
+idx = np.arange(0,NY-1)+NY-1
+t2[idx,0] = np.arange(1,NY)
+t2[idx,1] = NX-1
+# bottom wall
+idx = np.arange(0,NX-1)+NY*2-2
+t2[idx,0] = 1
+t2[idx,1] = np.arange(1,NX)
+# left wall of sheet
+idx = np.arange(0,plen)+NY*2+NX-3
+t2[idx,0] = np.arange(jbot,NY)
+t2[idx,1] = 50
+# right wall of sheet
+idx = np.arange(0,plen)+NY*2+NX-3+plen
+t2[idx,0] = np.arange(jbot,NY)
+t2[idx,1] = 51
+
+# homogenous corner points
+homcorn = np.array([[1,1],[1,NX-2]])
+
+# heterogeneous  corner points
+hetcorn = np.array([[1,NY-2],[NX-2,NY-2]])
+
 # sheet pile location
 
 # set of roof points
@@ -47,7 +86,7 @@ y1 = int(NY/4)
 y2 = int(NY/2)
 y3 = int(NY*3/4)
 
-pts = np.array([[x1,y1],[x1,y2],[x1,y3],[x2,y1],[x2,y2],[x2,y3]])
+t1 = np.array([[x1,y1],[x1,y2],[x1,y3],[x2,y1],[x2,y2],[x2,y3]])
 for a in pts:
    u[a[0],a[1]] = 1
 ###### End define problem variables
@@ -61,13 +100,15 @@ err = tol+1
 it=0
 while err > tol:
   it = it + 1
-  #print(str(iter))
   # Loop through interior nodes
   for i in range(1,NX-1):
     for j in range(1,NY-1):
-	  if [i,j] not in pts.tolist():
-		delta[i,j] = w*(u[i-1,j]+u[i,j-1]+u[i,j+1]+u[i+1,j]-4.*u[i,j])
-	  u[i,j] = u[i,j]+delta[i,j]
+        # evaluate type 1 BCs
+        # evaluate type 2 BCs
+        # evaluate hetero corners
+        # evaluate homo corners
+        delta[i,j] = w*(u[i-1,j]+u[i,j-1]+u[i,j+1]+u[i+1,j]-4.*u[i,j])
+        u[i,j] = u[i,j]+delta[i,j]
   # calculate error
   err = np.max(delta)
   if it > maxiter: 

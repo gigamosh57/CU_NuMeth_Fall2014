@@ -5,6 +5,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
 from datetime import datetime
 
 ###################################
@@ -12,17 +14,18 @@ from datetime import datetime
 
 tol = 10**-6
 maxiter = 50000
-w = 1/4.
-p = 0.001 #0.001, 0.01, 0.0101, 0.011
+p = 0.011 #0.001, 0.01, 0.0101, 0.011
 
 # Grid size
-NX = 21
-NY = 21
+NX = 101
+NY = 101
 
 xmax = 1.
 ymax = 1.
 x = np.arange(0,xmax+xmax/(NX-1),xmax/(NX-1))
 y = np.arange(0,ymax+ymax/(NY-1),ymax/(NY-1))
+k=2.975
+w = 0.5*(1-k/NX)
 
 # initialize matrices
 u = np.zeros((NX,NY))
@@ -92,13 +95,14 @@ X, Y = np.meshgrid(x, y)
 # this is usually not such a good idea, because they don't
 # occur on nice boundaries, but we do it here for purposes
 # of illustration.
-CS = plt.contourf(X, Y, u, 20, cmap=plt.cm.bone)
+#CS = plt.contourf(X, Y, u, 50, cmap=plt.cm.bone)
 
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(X, Y, u, rstride=2, cstride=2, cmap=plt.cm.bone)
 plt.title("P = " + str(p))
 plt.xlabel('x')
 plt.ylabel('y')
-
-#plt.figure()
 plt.show()
 
 ###### End plotting code

@@ -1,7 +1,7 @@
 ### Page Weil
 ### CVEN 5537
 ### 11/14/14
-### Project 4, Problem 3a - Sheet Pile - GS/SOR
+### Project 4, Problem 3 - Sheet Pile - GS/SOR
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,13 +10,13 @@ from datetime import datetime
 ###################################
 ###### Begin define problem variables
 
-NX = 101
+NX = 100
 NY = 101
 tol = 10**-6
 maxiter = 50000
 u0 = 0
 u1 = 1
-jbot = 31
+jbot = 91 #11, 31, 51, 71, 91
 plen = NY-jbot
 sploc = int(NX*2/4)
 
@@ -31,9 +31,9 @@ k=np.pi
 w = 0.5*(1-k/NX)
 
 # initialize matrices
-u = np.zeros((NX,NY))
-unew = np.zeros((NX,NY))
-delta = np.zeros((NX,NY))
+u = np.zeros((NY,NX))
+unew = np.zeros((NY,NX))
+delta = np.zeros((NY,NX))
 
 # generate set of coordinates for type 1 BCs
 # left set
@@ -85,8 +85,8 @@ for a in t1z2:
    u[a[0],a[1]] = u1
 
 # type 1 corners
-u[0,NY-1]=u0
-u[NX-1,NY-1]=u1
+u[0,NX-1]=u0
+u[NY-1,NX-1]=u1
 ###### End define problem variables
 ###################################
 
@@ -99,8 +99,8 @@ it=0
 while err > tol:
   it = it + 1
   # Loop through interior nodes
-  for i in range(1,NX-1):
-    for j in range(1,NY-1):
+  for i in range(1,NY-1):
+    for j in range(1,NX-1):
        if [i,j] in t2z1.tolist():
        # type 2, zone 1          
           delta[i,j] = 4*w/3*(u[i,j+1]+u[i-1,j]+u[i+1,j]-3.*u[i,j])
@@ -128,7 +128,7 @@ while err > tol:
        u[i,j] = u[i,j]+delta[i,j]
   # calculate error
   err = np.max(delta)
-  if round(it,-3) == it:
+  if round(it,-2) == it:
      print("it: ",str(it),", log(err): ",str(np.log(err)))
   if it > maxiter: 
     err = tol
@@ -181,11 +181,16 @@ X, Y = np.meshgrid(x, y)
 
 CS = plt.contourf(X, Y, u, 25, cmap=plt.cm.bone)
 
-plt.title('Problem 4, jbot= ',str(jbot))
+plt.title("Problem 4, jbot= "+str(jbot))
 plt.xlabel('x')
 plt.ylabel('y')
 plt.show()
 
+outflow = np.sum(u[NY-2,range(0,sploc+1)]-u[NY-1,range(0,sploc+1)])
+inflow = np.sum(u[NY-1,range(sploc+1,NX)]-u[NY-2,range(sploc+1,NX)])
+
+#outflow - inflow
+print("jbot= "+str(jbot)+", outflow = "+str(outflow)+", inflow = "+str(inflow)+", net out= "+str(outflow - inflow))
 ###### End plotting code
 ###################################
 

@@ -13,6 +13,7 @@ from datetime import datetime
 tol = 10**-6
 maxiter = 5000
 w = 1/4.
+p = 0.001
 
 # Grid size
 NX = 21
@@ -61,7 +62,7 @@ while err > tol:
   for i in range(1,NX-1):
     for j in range(1,NY-1):
 	  if [i,j] not in pts.tolist():
-		delta[i,j] = w*(u[i-1,j]+u[i,j-1]+u[i,j+1]+u[i+1,j]-4.*u[i,j])
+		delta[i,j] = w*(-(0.01+p)+u[i-1,j]+u[i,j-1]+u[i,j+1]+u[i+1,j]-4.*u[i,j])
 	  u[i,j] = u[i,j]+delta[i,j]
   # calculate error
   err = np.max(delta)

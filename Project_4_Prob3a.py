@@ -194,4 +194,11 @@ print("jbot= "+str(jbot)+", outflow = "+str(outflow)+", inflow = "+str(inflow)+"
 ###### End plotting code
 ###################################
 
+netout = [0.00698,0.01,0.0138,0.021,0.642]
+jbot = (NX-np.array([11,31,51,71,91.]))/NX
+
+plt.plot(jbot,netout)
+plt.xlabel('Sheetpile height as pct of total')
+plt.ylabel('Net outflow')
+plt.show()
 

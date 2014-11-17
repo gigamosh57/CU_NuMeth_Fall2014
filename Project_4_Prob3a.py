@@ -12,7 +12,10 @@ from datetime import datetime
 
 NX = 100
 NY = 101
-tol = 10**-6
+# TOLERANCE FOR OLD DELTA ERROR METHOD
+# tol = 10**-6
+# TOLERANCE FOR NEW MASS BALANCE ERROR METHOD
+tol = 10**-3
 maxiter = 50000
 u0 = 0
 u1 = 1
@@ -127,7 +130,12 @@ while err > tol:
           delta[i,j] = w*(u[i-1,j]+u[i,j-1]+u[i,j+1]+u[i+1,j]-4.*u[i,j])
        u[i,j] = u[i,j]+delta[i,j]
   # calculate error
-  err = np.max(delta)
+  # OLD DELTA ERROR
+  # err = np.max(delta)
+  # NEW ERROR BASED ON INFLOW-OUTFLOW CONVERGENCE
+  outflow = np.sum(u[NY-2,range(0,sploc+1)]-u[NY-1,range(0,sploc+1)])
+  inflow = np.sum(u[NY-1,range(sploc+1,NX)]-u[NY-2,range(sploc+1,NX)])
+  err = np.absolute(outflow-inflow)
   if round(it,-2) == it:
      print("it: ",str(it),", log(err): ",str(np.log(err)))
   if it > maxiter: 
@@ -194,11 +202,23 @@ print("jbot= "+str(jbot)+", outflow = "+str(outflow)+", inflow = "+str(inflow)+"
 ###### End plotting code
 ###################################
 
-netout = [0.00698,0.01,0.0138,0.021,0.642]
-jbot = (NX-np.array([11,31,51,71,91.]))/NX
+# Plot net mass balance vs sheet pile location
+if 1==0:
+   netout = [0.00698,0.01,0.0138,0.021,0.642]
+   outflow = [0.184,0.259,0.343,0.481,0.818]
+   jbot = (NX-np.array([11,31,51,71,91.]))/NX
+   
+   # Plot outflow vs sheet pile location (how does sheetpile impact total outflow)
+   plt.plot(jbot,outflow)
+   plt.xlabel('Sheetpile height as pct of total')
+   plt.ylabel('Outflow')
+   plt.show()
+   
+   # Plot net mass balance vs sheet pile location
+   plt.plot(jbot,netout)
+   plt.xlabel('Sheetpile height as pct of total')
+   plt.ylabel('Net outflow')
+   plt.show()
+   
 
-plt.plot(jbot,netout)
-plt.xlabel('Sheetpile height as pct of total')
-plt.ylabel('Net outflow')
-plt.show()
 

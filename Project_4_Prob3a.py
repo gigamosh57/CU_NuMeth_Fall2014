@@ -20,7 +20,7 @@ NY = 101
 # tol = 10**-6
 # TOLERANCE FOR NEW MASS BALANCE ERROR METHOD
 tol = 10**-3.
-maxiter = 50000
+maxiter = 20
 u0 = 0.
 u1 = 1.
 jbot = 91 #11, 31, 51, 71, 91
@@ -69,13 +69,13 @@ t2z5[:,0] = np.arange(1,NY)
 t2z5[:,1]= NX-1
 
 # zone 6 (left side of sheet pile)
-t2z6 = np.hstack((np.zeros((plen-1,1)),np.zeros((plen-1,1))))
-t2z6[:,0] = np.arange(jbot,NY-1)
+t2z6 = np.hstack((np.zeros((plen,1)),np.zeros((plen,1))))
+t2z6[:,0] = np.arange(jbot,NY)
 t2z6[:,1] = sploc
 
 # zone 7 (right side of sheet pile)
-t2z7 = np.hstack((np.zeros((plen-1,1)),np.zeros((plen-1,1))))
-t2z7[:,0] = np.arange(jbot,NY-1)
+t2z7 = np.hstack((np.zeros((plen,1)),np.zeros((plen,1))))
+t2z7[:,0] = np.arange(jbot,NY)
 t2z7[:,1] = sploc+1
 
 # homogenous corner point 2

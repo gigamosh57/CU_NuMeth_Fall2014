@@ -6,7 +6,6 @@
 ####### FIX HOW SUBSETS ARE SELECTED AND BOUNDARIES CALCULATED
 ####### SOMETHING IS BROKEN IN ZONE 5
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
@@ -20,10 +19,11 @@ NY = 101
 # tol = 10**-6
 # TOLERANCE FOR NEW MASS BALANCE ERROR METHOD
 tol = 10**-3.
-maxiter = 20
+maxiter = 100000
 u0 = 0.
 u1 = 1.
 jbot = 91 #11, 31, 51, 71, 91
+jbot = int(91*NY/100)
 plen = NY-jbot
 sploc = int(NX*2/4)-1
 
@@ -92,8 +92,8 @@ for a in t1z2:
    u[a[0],a[1]] = u1
 
 # type 1 corners
-u[0,NX-1]=u0
-u[NY-1,NX-1]=u1
+#u[0,NX-1]=u0
+#u[NY-1,NX-1]=u1
 ###### End define problem variables
 ###################################
 
@@ -140,9 +140,9 @@ while err1 > tol:
   outflow = np.sum(u[NY-2,range(0,sploc+1)]-u[NY-1,range(0,sploc+1)])
   inflow = np.sum(u[NY-1,range(sploc+1,NX)]-u[NY-2,range(sploc+1,NX)])
   err1 = abs(outflow-inflow)
-  print("outflow = "+str(outflow)+", inflow = "+str(inflow)+", err1= "+str(err1)+", logerr1= "+str(np.log(err1)))
+  #print("outflow = "+str(outflow)+", inflow = "+str(inflow)+", err1= "+str(err1)+", logerr1= "+str(np.log(err1)))
   if round(it,-2) == it:
-     print("it: ",str(it),", log(err): ",str(np.log(err1)))
+     print("it: ",str(it),", log(err): ",str(np.log10(err1)))
   if it > maxiter: 
     err1 = tol
     print("Hit ",str(maxiter)," iter")

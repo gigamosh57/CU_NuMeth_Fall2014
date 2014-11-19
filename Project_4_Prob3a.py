@@ -210,15 +210,15 @@ print("jbot= "+str(jbot)+", outflow = "+str(outflow)+", inflow = "+str(inflow)+"
 ###################################
 
 # Plot net mass balance vs sheet pile location
-if 1==0:
-   netout = [0.00698,0.01,0.0138,0.021,0.642]
+if 1==1:
+   outflow = [0.184978365091,0.257385022557,0.340732445295,0.478425004875,0.814046545665]
    #outflow = [0.184,0.259,0.343,0.481,0.818]
    jbot = (NX-np.array([11,31,51,71,91.]))/NX
    
    # Plot outflow vs sheet pile location (how does sheetpile impact total outflow)
    plt.plot(jbot,outflow)
    plt.xlabel('Sheetpile height as pct of total')
-   plt.ylabel('Outflow')
+   plt.ylabel('Total Outflow')
    plt.show()
    
    # Plot net mass balance vs sheet pile location

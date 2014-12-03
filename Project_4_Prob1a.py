@@ -23,9 +23,9 @@ x = np.arange(0,xmax+xmax/(NX-1),xmax/(NX-1))
 y = np.arange(0,ymax+ymax/(NY-1),ymax/(NY-1))
 
 # initialize matrices
-u = np.empty((NX,NY))*0.
-unew = np.empty((NX,NY))*0.
-delta = np.empty((NX,NY))*0.
+u = np.zeros((NX,NY))
+unew = np.zeros((NX,NY))
+delta = np.zeros((NX,NY))
 
 # Boundary conditions
 u[0,:]=x
@@ -83,7 +83,7 @@ X, Y = np.meshgrid(x, y)
 # of illustration.
 CS = plt.contourf(X, Y, u, 10, cmap=plt.cm.bone)
 
-plt.title('Test')
+plt.title('Jacobi')
 plt.xlabel('x')
 plt.ylabel('y')
 

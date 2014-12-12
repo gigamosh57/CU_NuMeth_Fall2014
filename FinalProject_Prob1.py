@@ -3,6 +3,9 @@
 ### 11/14/14
 ### Final Project, Prob 1
 
+##### RIGHT NOW THE ITERATION BLOWS UP
+
+
 import numpy as np
 # For pi
 import math
@@ -50,7 +53,7 @@ def thomas(a,b,c,r):
 ###################################
 ###### Begin define problem variables
 
-tol = 10**-6
+errtol = 10**-6
 maxiter = 100
 
 # Grid size
@@ -81,7 +84,7 @@ bj = 1
 # initialize matrices and initial conditions 
 u = np.zeros((NX,NT)) # starts at zero everywhere except the end
 u[NX-1,:]=bj
-unew = np.zeros((NX)) 
+unew = np.zeros((NX))  
 uold = np.zeros((NX))  
 a = np.zeros((NX)) 
 a[NX-1]=-c4/dx
@@ -106,20 +109,21 @@ for ti in range(1,NT):
       err = np.amax(np.absolute(f))
       # evaluate f
       f[0] = (c1-c2/dx)*unew[0]+(c2/dx*unew[1])-b1
-      f[1:(NX-1)] = -mu/(p+1)*(unew[0:NX-2]**(p+1))+(unew[1:NX-1]+2*mu/(p+1)*unew[1:NX-1]**(p+1))-mu/(p+1)*(unew[2:NX]**(p+1))-uold[1:NX-1]
+      f[1:(NX-1)] = -mu/(p+1)*(unew[0:(NX-2)]**(p+1))+(unew[1:(NX-1)]+2*mu/(p+1)*unew[1:(NX-1)]**(p+1))-mu/(p+1)*(unew[2:NX]**(p+1))-uold[1:(NX-1)]
       f[NX-1] = (-c4/dx)*unew[NX-2]+(c3+c4/dx)*unew[NX-1]-bj
+      
       # create jacobian (as abc)
       a[1:NX] = -mu*(unew[0:(NX-1)])**p
       b[1:(NX-1)] = 1+2*mu*(unew[1:(NX-1)])**p
       c[0:(NX-1)] = -mu*(unew[1:(NX)])**p
+      
       # solve with thomas
-      delu = thomas(a,b,c,-1*f)
+      delu = thomas(a,b,c,-f)
       # update value
       unew = unew + delu
       print(str(err))
-    
-  # Update u with converged values
-  u[[:,ti]=unew
-  print("IT: ",str(ti))
+   # Update u with converged values
+   u[:,ti]=unew
+   print("IT: ",str(ti))
   
 # plot multiple time values on single plot for single value of p

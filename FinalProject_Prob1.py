@@ -96,32 +96,30 @@ f = np.zeros((NX))
 ###################################
 
 # time loop 
-#for ti in range(0,NT):
-
-unew = u[:,ti]
-uold = u[:,ti]
-  # loop through evaluations of [F]
-  # evaluate f
-f[0] = (c1-c2/dx)*unew[0]+(c2/dx*unew[1])-b1
-f[1:(NX-1)] = -mu/(p+1)*(unew[0:NX-2]**(p+1))+(unew[1:NX-1]+2*mu/(p+1)*unew[1:NX-1]**(p+1))-mu/(p+1)*(unew[2:NX]**(p+1))-uold[1:NX-1]
-f[NX-1] = (-c4/dx)*unew[NX-2]+(c3+c4/dx)*unew[NX-1]-bj
-
-  # create jacobian (as abc)
-a[1:NX] = -mu*(unew[0:(NX-1)])**p
-b[1:(NX-1)] = 1+2*mu*(unew[1:(NX-1)])**p
-c[0:(NX-1)] = -mu*(unew[1:(NX)])**p
-
-
-
-    # evaluate f
-
-    # calculate a,b,c
-
-delu = thomas(a,b,c,-1*f)
-    # solve with thomas
-    # update value
-    # check convergence
+for ti in range(1,NT):
+   unew = u[:,ti-1]
+   uold = u[:,ti-1]
+   # loop through evaluations of [F]
+   err = errtol+1
+   while err > errtol:
+      # check convergence
+      err = np.amax(np.absolute(f))
+      # evaluate f
+      f[0] = (c1-c2/dx)*unew[0]+(c2/dx*unew[1])-b1
+      f[1:(NX-1)] = -mu/(p+1)*(unew[0:NX-2]**(p+1))+(unew[1:NX-1]+2*mu/(p+1)*unew[1:NX-1]**(p+1))-mu/(p+1)*(unew[2:NX]**(p+1))-uold[1:NX-1]
+      f[NX-1] = (-c4/dx)*unew[NX-2]+(c3+c4/dx)*unew[NX-1]-bj
+      # create jacobian (as abc)
+      a[1:NX] = -mu*(unew[0:(NX-1)])**p
+      b[1:(NX-1)] = 1+2*mu*(unew[1:(NX-1)])**p
+      c[0:(NX-1)] = -mu*(unew[1:(NX)])**p
+      # solve with thomas
+      delu = thomas(a,b,c,-1*f)
+      # update value
+      unew = unew + delu
+      print(str(err))
+    
   # Update u with converged values
-  # Store matrix of u values (time and space)
+  u[[:,ti]=unew
+  print("IT: ",str(ti))
   
 # plot multiple time values on single plot for single value of p

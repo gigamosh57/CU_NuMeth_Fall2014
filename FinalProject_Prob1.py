@@ -86,28 +86,30 @@ uold = np.zeros((NX))
 a = np.zeros((NX)) 
 a[NX-1]=-c4/dx
 b = np.zeros((NX)) 
-
+b[0] = c1-c2/dx
+b[NX-1] = c3+c4/dx
 c = np.zeros((NX)) 
+c[0] = c2/dx
 f = np.zeros((NX)) 
 
 ###### End define problem variables
 ###################################
 
 # time loop 
-for ti in range(0,NT):
+#for ti in range(0,NT):
 
 unew = u[:,ti]
 uold = u[:,ti]
   # loop through evaluations of [F]
   # evaluate f
 f[0] = (c1-c2/dx)*unew[0]+(c2/dx*unew[1])-b1
-f[1:(NX-2)] = -mu/(p+1)*(unew[0:NX-3]**(p+1))+(unew[1:NX-2]+2*mu/(p+1)*unew[1:NX-2]**(p+1))-mu/(p+1)*(unew[2:NX-1]**(p+1))-uold[1:NX-2]
-f[NX-1] = (-c4/dx)*unew[NX-2]+(c3+c4/dx*unew[NX-1])-bj
+f[1:(NX-1)] = -mu/(p+1)*(unew[0:NX-2]**(p+1))+(unew[1:NX-1]+2*mu/(p+1)*unew[1:NX-1]**(p+1))-mu/(p+1)*(unew[2:NX]**(p+1))-uold[1:NX-1]
+f[NX-1] = (-c4/dx)*unew[NX-2]+(c3+c4/dx)*unew[NX-1]-bj
 
   # create jacobian (as abc)
-a = 
-b = 
-c = 
+a[1:NX] = -mu*(unew[0:(NX-1)])**p
+b[1:(NX-1)] = 1+2*mu*(unew[1:(NX-1)])**p
+c[0:(NX-1)] = -mu*(unew[1:(NX)])**p
 
 
 

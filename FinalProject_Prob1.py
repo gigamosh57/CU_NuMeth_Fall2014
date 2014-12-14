@@ -69,8 +69,8 @@ NT = int(tmax/dt)+1
 xp = np.arange(0,xmax+dx,dx)
 tp = np.arange(0,tmax+dt,dt)
 
-alpha = 1.
-p = 1 # 0,1,2,4
+alpha = 1 # 0.5 looks better
+p = 0 # 0,1,2,4
 
 mu = alpha*dt/dx**2
 
@@ -140,7 +140,8 @@ for a in np.arange(0,len(tplot)): colors = colors + ([(float(a)/(len(tplot))),0,
 fig = plt.figure()
 axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
 axes.set_xlabel('x')
-axes.set_ylabel('u')
+axes.set_ylabel('u(x)')
+plt.title("Nonlinear Diffusion; alpha: "+str(alpha)+", p: "+str(p))
 #axes.plot(t,u[1,:])
 #axes.plot(x,u[:,1])
 
@@ -148,7 +149,6 @@ for p in tplot:
   pix = tplot.index(p)
   tix = list(tp).index(p)
   print(str(tix))
-
   axes.plot(xp,u[:,tix],color = colors[pix],label = "t: " + str(tplot[pix]))
 
 axes.legend()

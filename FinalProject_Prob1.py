@@ -24,6 +24,7 @@ def thomas(a,b,c,r):
    e = b*0
    f = b*0
    g = b*0
+   x = b*0
    y = b*0
    J = len(b)
    
@@ -60,16 +61,16 @@ maxiter = 100
 dx = 0.01
 dt = 0.01
 xmax = 1
-tmax = 100
+tmax = 5
 
 NX = int(xmax/dx)+1
 NT = int(tmax/dt)+1
 
-x = np.arange(0,xmax+dx,dx)
-t = np.arange(0,tmax+dt,dt)
+xp = np.arange(0,xmax+dx,dx)
+tp = np.arange(0,tmax+dt,dt)
 
 alpha = 1.
-p = 0 # 0,1,2,4
+p = 1 # 0,1,2,4
 
 mu = alpha*dt/dx**2
 
@@ -128,3 +129,27 @@ for ti in range(1,NT):
    print("IT: ",str(ti))
   
 # plot multiple time values on single plot for single value of p
+# Loop through and plot
+
+## Initialize arrays
+tplot = [0.05,0.25, 0.5, 1.0, 2.0, 5.0]
+colors = ()
+for a in np.arange(0,len(tplot)): colors = colors + ([(float(a)/(len(tplot))),0,0],)
+
+## Loop through and plot
+fig = plt.figure()
+axes = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+axes.set_xlabel('x')
+axes.set_ylabel('u')
+#axes.plot(t,u[1,:])
+#axes.plot(x,u[:,1])
+
+for p in tplot:
+  pix = tplot.index(p)
+  tix = list(tp).index(p)
+  print(str(tix))
+
+  axes.plot(xp,u[:,tix],color = colors[pix],label = "t: " + str(tplot[pix]))
+
+axes.legend()
+plt.show()

@@ -70,7 +70,7 @@ xp = np.arange(0,xmax+dx,dx)
 tp = np.arange(0,tmax+dt,dt)
 
 alpha = 1 # 0.5 looks better
-p = 0 # 0,1,2,4
+p = 0. # 0,1,2,4
 
 mu = alpha*dt/dx**2
 
@@ -145,11 +145,14 @@ plt.title("Nonlinear Diffusion; alpha: "+str(alpha)+", p: "+str(p))
 #axes.plot(t,u[1,:])
 #axes.plot(x,u[:,1])
 
-for p in tplot:
-  pix = tplot.index(p)
-  tix = list(tp).index(p)
+for pp in tplot:
+  pix = tplot.index(pp)
+  tix = list(tp).index(pp)
   print(str(tix))
   axes.plot(xp,u[:,tix],color = colors[pix],label = "t: " + str(tplot[pix]))
 
+ancol = [0,0,1]
+anu = xp**(1/(p+1))
+axes.plot(xp,anu,color = ancol,label = "analy")
 axes.legend()
 plt.show()

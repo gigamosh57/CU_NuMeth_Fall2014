@@ -69,14 +69,14 @@ NT = int(tmax/dt)+1
 xp = np.arange(0,xmax+dx,dx)
 tp = np.arange(0,tmax+dt,dt)
 
-alpha = 1 # 0.5 looks better
-p = 0 # 0,1,2,4
+alpha = 0.5 # 0.5 looks better
+p = 4 # 0,1,2,4
 
 mu = alpha*dt/dx**2
 
 # Boundary conditions
-c1 = 1
-c2 = 0
+c1 = 0
+c2 = 1
 c3 = 1
 c4 = 0
 b1 = 0
@@ -106,6 +106,7 @@ for ti in range(1,NT):
    uold = u[:,ti-1]
    # loop through evaluations of [F]
    err = errtol+1
+   #b1 = unew[0]
    while err > errtol:
       # check convergence
       err = np.amax(np.absolute(f))

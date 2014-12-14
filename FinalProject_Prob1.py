@@ -2,7 +2,7 @@
 ### CVEN 5537
 ### 11/14/14
 ### Final Project, Prob 1
-
+# c:\python27\Arcgis10.2\python.exe
 ##### RIGHT NOW THE ITERATION BLOWS UP
 
 
@@ -99,6 +99,7 @@ f = np.zeros((NX))
 ###################################
 
 # time loop 
+#for ti in range(1,3):
 for ti in range(1,NT):
    unew = u[:,ti-1]
    uold = u[:,ti-1]
@@ -108,14 +109,14 @@ for ti in range(1,NT):
       # check convergence
       err = np.amax(np.absolute(f))
       # evaluate f
-      f[0] = (c1-c2/dx)*unew[0]+(c2/dx*unew[1])-b1
+      f[0] = (c1-c2/dx)*unew[0]+(c2/dx)*unew[1]-b1
       f[1:(NX-1)] = -mu/(p+1)*(unew[0:(NX-2)]**(p+1))+(unew[1:(NX-1)]+2*mu/(p+1)*unew[1:(NX-1)]**(p+1))-mu/(p+1)*(unew[2:NX]**(p+1))-uold[1:(NX-1)]
       f[NX-1] = (-c4/dx)*unew[NX-2]+(c3+c4/dx)*unew[NX-1]-bj
       
       # create jacobian (as abc)
-      a[1:NX] = -mu*(unew[0:(NX-1)])**p
+      a[1:(NX-1)] = -mu*(unew[0:(NX-2)])**p
       b[1:(NX-1)] = 1+2*mu*(unew[1:(NX-1)])**p
-      c[0:(NX-1)] = -mu*(unew[1:(NX)])**p
+      c[1:(NX-1)] = -mu*(unew[2:(NX)])**p
       
       # solve with thomas
       delu = thomas(a,b,c,-f)
